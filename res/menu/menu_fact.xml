@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/itemAddComment"
+        android:icon="@drawable/ic_action_write"
+        android:showAsAction="always"
+        android:title="@string/add_comment"/>
+
+    <item
+        android:id="@+id/itemRefreshComment"
+        android:icon="@drawable/ic_action_refresh"
+        android:showAsAction="always"
+        android:title="@string/refresh_comment"/>
+
+</menu>

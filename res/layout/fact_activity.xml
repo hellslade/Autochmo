@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/horizontalbar"
+        android:layout_width="fill_parent"
+        android:layout_height="10dip"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/horizontalbar" />
+
+    <RelativeLayout 
+        android:id="@+id/gray_box"
+        android:layout_below="@id/horizontalbar"
+        android:layout_alignParentLeft="true"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/gray_box">
+        <RelativeLayout
+	        xmlns:android="http://schemas.android.com/apk/res/android"
+	        android:id="@+id/numberTextView"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentLeft="true"
+	        android:layout_marginLeft="0dip"
+	        android:layout_marginTop="0dp" >
+	
+	        <TextView
+	            android:id="@+id/nomerView"
+	            android:layout_width="105dip"
+	            android:layout_height="wrap_content"
+	            android:layout_alignParentLeft="true"
+	            android:layout_alignParentTop="true"
+	            android:background="@drawable/nomer_rus"
+	            android:gravity="center_horizontal"
+	            android:text="Y 655 YY"
+	            android:textColor="#4C4C4C"
+	            android:textSize="20dip"
+	            android:textStyle="bold" />
+	
+	        <TextView
+	            android:id="@+id/regionView"
+	            android:layout_width="50dip"
+	            android:layout_height="wrap_content"
+	            android:layout_alignBottom="@id/nomerView"
+	            android:layout_alignTop="@id/nomerView"
+	            android:layout_toRightOf="@id/nomerView"
+	            android:background="@drawable/region_rus"
+	            android:gravity="center_horizontal"
+	            android:text="72"
+	            android:textColor="#4C4C4C"
+	            android:textSize="15dip"
+	            android:textStyle="bold" />
+        </RelativeLayout>
+        <TextView
+	        android:id="@+id/rateMinusTextView"
+	        android:layout_width="50dip"
+	        android:layout_height="wrap_content"
+	        android:text="15"
+	        android:gravity="center"
+	        android:textColor="#000000"
+	        android:layout_alignBaseline="@id/numberTextView"
+	        android:layout_alignParentRight="true"
+	        android:background="@drawable/convict_bg"
+	        android:clickable="true"
+	        android:textSize="@dimen/text_size_big" />
+        <TextView
+	        android:id="@+id/ratePlusTextView"
+	        android:layout_width="50dip"
+	        android:layout_height="wrap_content"
+            android:layout_marginRight="10dip"
+            android:textColor="#000000"
+            android:gravity="center"
+            android:clickable="true"
+            android:layout_alignBaseline="@id/numberTextView"
+            android:layout_toLeftOf="@id/rateMinusTextView"
+            android:background="@drawable/justify_bg"
+            android:text="2"
+	        android:textSize="@dimen/text_size_big" />
+        
+    </RelativeLayout>
+    <ListView
+        android:id="@+id/commentListView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/gray_box"
+        android:layout_marginTop="10dp"
+        android:divider="@color/transparent"
+        android:dividerHeight="0dp"
+        android:textSize="@dimen/text_size_medium" >
+    </ListView>
+
+</RelativeLayout>

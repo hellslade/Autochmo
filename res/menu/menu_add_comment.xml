@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/itemOk"
+        android:icon="@drawable/ic_action_ok"
+        android:showAsAction="always"
+        android:title="@string/add_comment_ok"/>
+
+    <item
+        android:id="@+id/itemCancel"
+        android:icon="@drawable/ic_action_close"
+        android:showAsAction="always"
+        android:title="@string/add_comment_cancel"/>
+
+</menu>

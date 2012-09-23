@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    >
+    <TextView
+        android:id="@+id/horizontalbar"
+        android:layout_width="fill_parent"
+        android:layout_height="10dip"
+        android:background="@drawable/horizontalbar" 
+        />
+    
+    <ru.android.hellslade.autochmo.DashboardLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@drawable/db_bg">
+        
+        <Button android:id="@+id/btn_lenta"
+            style="@style/DashboardButton"
+            android:text="@string/btn_lenta"
+            android:drawableTop="@drawable/ic_menu_list" />
+        <Button android:id="@+id/btn_add_fact"
+            style="@style/DashboardButton"
+            android:text="@string/btn_add_fact"
+            android:drawableTop="@drawable/ic_menu_photo" />
+    </ru.android.hellslade.autochmo.DashboardLayout>
+
+</LinearLayout>

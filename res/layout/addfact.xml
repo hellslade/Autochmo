@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relativeLayout1"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+    <TextView
+        android:id="@+id/horizontalbar"
+        android:layout_width="fill_parent"
+        android:layout_height="10dip"
+        android:background="@drawable/horizontalbar" 
+        />
+    <Gallery
+        android:id="@+id/photoGallery"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/horizontalbar"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/photoGallery"
+        android:gravity="center" />
+
+    <ImageButton
+        android:id="@+id/buttonAddShot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/imageView"
+        android:src="@drawable/ic_menu_photo" />
+
+    <ImageButton
+        android:id="@+id/buttonAddImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/imageView"
+        android:layout_toRightOf="@id/buttonAddShot"
+        android:src="@drawable/ic_menu_addphoto" />
+
+    <EditText
+        android:id="@+id/nomerEditText"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/buttonAddShot"
+        android:singleLine="true"
+        android:hint="@string/enter_nomer" >
+
+        <requestFocus />
+    </EditText>
+
+    <!-- Если не задать цвет, то почему то пропадает текст при потере фокуса -->
+
+    <AutoCompleteTextView
+        android:id="@+id/carmarkEditText"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/nomerEditText"
+        android:completionThreshold="1"
+        android:hint="@string/enter_carmark"
+        android:singleLine="true"
+        android:text=""
+        android:textColor="#000000" />
+
+    <EditText
+        android:id="@+id/commentEditText"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/carmarkEditText"
+        android:gravity="top|left"
+        android:hint="@string/enter_comment"
+        android:inputType="textMultiLine" >
+    </EditText>
+
+</RelativeLayout>

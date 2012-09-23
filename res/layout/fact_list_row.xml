@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:paddingBottom="10dp"
+    android:paddingRight="10dp"
+    android:paddingTop="10dp" >
+
+    <ImageView
+        android:id="@+id/factImage"
+        android:layout_width="150dip"
+        android:layout_height="100dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:paddingLeft="5dip"
+        android:paddingRight="5dip" />
+
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/numberTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="0dip"
+        android:layout_marginTop="0dp"
+        android:layout_toRightOf="@+id/factImage" >
+
+        <TextView
+            android:id="@+id/nomerView"
+            android:layout_width="105dip"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/nomer_rus"
+            android:gravity="center_horizontal"
+            android:text="Y 655 YY"
+            android:textColor="#4C4C4C"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/regionView"
+            android:layout_width="50dip"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/nomerView"
+            android:layout_alignTop="@id/nomerView"
+            android:layout_toRightOf="@id/nomerView"
+            android:background="@drawable/region_rus"
+            android:gravity="center_horizontal"
+            android:text="72"
+            android:textColor="#4C4C4C"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/factDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/numberTextView"
+        android:layout_below="@id/numberTextView"
+        android:gravity="right"
+        android:text="28.10.2011"
+        android:textColor="#999999"
+        android:textSize="@dimen/text_size_medium" />
+
+    <TextView
+        android:id="@+id/factCarmodel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/numberTextView"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/factImage"
+        android:gravity="left"
+        android:text="ВАЗ 2112 - 5"
+        android:textSize="@dimen/text_size_extra_medium"
+        android:textStyle="normal" />
+
+    <TextView
+        android:id="@+id/ratingMinus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/factDate"
+        android:layout_below="@id/numberTextView"
+        android:layout_marginLeft="20dip"
+        android:layout_toRightOf="@id/factDate"
+        android:text="-28"
+        android:textColor="@color/red"
+        android:textSize="@dimen/text_size_medium" />
+
+    <TextView
+        android:id="@+id/ratingPlus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/ratingMinus"
+        android:layout_below="@id/numberTextView"
+        android:layout_marginLeft="20dip"
+        android:layout_toRightOf="@id/ratingMinus"
+        android:text="+35"
+        android:textColor="@color/green"
+        android:textSize="@dimen/text_size_medium" />
+
+</RelativeLayout>

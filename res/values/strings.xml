@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">åвточмо</string>
+    <string name="app_name_lenta">åвточмо: Лента</string>
+    <string name="app_name_fact">åвточмо: Факт</string>
+    <string name="app_name_settings">åвточмо: Настройки</string>
+    <string name="app_name_add_fact">åвточмо: Новый факт</string>
+    <string name="app_name_add_comment">åвточмо: Новый комментарий</string>
+
+    <string name="authorize">http://xml.autochmo.ru/authorize/</string>
+    <string name="checkauth">http://xml.autochmo.ru/checkauth/</string>
+    <string name="host">http://xml.autochmo.ru/</string>
+    <string name="host_image">http://autochmo.ru</string>
+  <!--
+    <string name="authorize">http://xml-avtochmo.greensight.ru/authorize/</string>
+    <string name="checkauth">http://xml-avtochmo.greensight.ru/checkauth/</string>
+    <string name="host">http://xml-avtochmo.greensight.ru/</string>
+    <string name="host_image">http://avtochmo.greensight.ru/</string>
+-->
+ 
+    <string name="connection_failed">Отсутствует подключение к интернет</string>
+        
+    <string name="preference">Настройки</string>
+    <string name="preferenceAuth">Настройки авторизации</string>
+    <string name="preferenceOther">Другие настройки</string>
+    <string name="loginKey">loginKey</string>
+    <string name="loginTitle">Логин</string>
+    <string name="loginSummary">Имя пользователя на сайте</string>
+    <string name="passwordKey">password</string>
+    <string name="passwordTitle">Пароль</string>
+    <string name="passwordSummary">Пароль для доступа к сайту</string>
+    <string name="lazyLoadKey">lazyLoadKey</string>
+    <string name="lazyLoadTitle">Отложенная загрузка</string>
+    <string name="lazyLoadSummary">Добавление новых фактов по запросу пользователя</string>
+    <string name="factCountKey">factCountKey</string>
+    <string name="factCountTitle">Количество фактов</string>
+    <string name="factCountSummary">Количество фактов отображаемых на одной странице</string>
+    <string name="convict">Осудить</string>
+    <string name="justify">Оправдать</string>
+    <string name="userComments">Комментарии</string>
+    <string name="addShot">Добавить снимок</string>
+    <string name="btn_lenta">Лента</string>
+    <string name="btn_add_fact">Добавить</string>
+    <string name="add_comment">Добавить комментарий</string>
+    <string name="refresh_comment">Обновить комментарии</string>
+    <string name="settings">Настройки</string>
+    <string name="exit">Выход</string>
+    <string name="add_comment_save">Сохранить</string>
+    <string name="add_comment_cancel">Отменить</string>
+    <string name="add_comment_ok">Комментарий добавлен</string>
+    <string name="add_fact_cancel">Отменить</string>
+    <string name="add_fact_ok">Факт добавлен</string>
+    <string name="add_fact_fail">Не удалось добавить факт</string>
+    <string name="add_comment_fail">Не удалось добавить комментарий</string>
+    <string name="enter_nomer">Введите номер</string>
+    <string name="enter_carmark">Введите марку автомобиля</string>
+    <string name="enter_carmodel">Введите модель автомобиля</string>
+    <string name="enter_comment">Введите комментарий</string>
+    <string name="show_more">Больше</string>
+    <string name="show_less">Меньше</string>
+    
+    <string name="add_comment_task_message">Подождите, добавление комментария..</string>
+    <string name="vote_task_message">Подождите, голосование..</string>
+    <string name="refresh_task_message">Подождите, идет обновление..</string>
+    <string name="get_fact_task_message">Подождите, идет загрузка..</string>
+    
+    <string name="vote_ok">Ваш голос учтен</string>
+    <string name="vote_fail">По каким-то неизвестным причинам, Ваш голос не был учтен</string>
+</resources>

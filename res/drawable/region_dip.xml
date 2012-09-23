@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item>
+        <shape
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:shape="rectangle" >
+            <solid android:color="#D82424" />
+            <padding
+                android:bottom="2dp"
+                android:left="0dp"
+                android:right="2dp"
+                android:top="2dp" />
+            <corners
+                android:bottomLeftRadius="0dip"
+                android:bottomRightRadius="5dip"
+                android:topLeftRadius="0dip"
+                android:topRightRadius="5dip" />
+        </shape>
+    </item>
+    <item>
+        <shape
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:shape="rectangle" >
+            <solid android:color="#FFFFFF" />
+            <padding
+                android:bottom="1dp"
+                android:left="1dp"
+                android:right="1dp"
+                android:top="1dp" />
+            <corners
+                android:bottomLeftRadius="0dip"
+                android:bottomRightRadius="5dip"
+                android:topLeftRadius="0dip"
+                android:topRightRadius="5dip" />
+        </shape>
+    </item>
+    <item>
+        <shape
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:shape="rectangle" >
+            <solid android:color="#D82424" />
+            <padding
+                android:bottom="2dp"
+                android:left="4dp"
+                android:right="4dp"
+                android:top="0dp" />
+            <corners
+                android:bottomLeftRadius="0dip"
+                android:bottomRightRadius="5dip"
+                android:topLeftRadius="0dip"
+                android:topRightRadius="5dip" />
+        </shape>
+    </item>
+    <item>
+        <bitmap android:src="@drawable/gosnomer_oth" android:gravity="bottom" />
+    </item>
+</layer-list>

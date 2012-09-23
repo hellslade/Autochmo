@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:paddingLeft="5dp"
+    android:paddingRight="5dp"
+    android:paddingTop="5dp" >
+
+    <ImageView
+        android:id="@+id/userPicture"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:background="@color/transparent"
+        />
+
+    <TextView
+        android:id="@+id/userLogin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/userPicture"
+        android:gravity="left"
+        android:text="TextView"
+        android:textSize="@dimen/text_size_medium" />
+
+    <TextView
+        android:id="@+id/userDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:gravity="right"
+        android:text="28.10.2011"
+        android:textColor="#999999"
+        android:textSize="@dimen/text_size_medium" />
+
+    <ru.android.hellslade.autochmo.ExpandablePanel
+        xmlns:ExpandablePanel="http://schemas.android.com/apk/res/ru.android.hellslade.autochmo"
+        android:id="@+id/foo"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/userPicture"
+        android:layout_alignParentLeft="true"
+        ExpandablePanel:collapsedHeight="30dip"
+        ExpandablePanel:content="@+id/userComment"
+        ExpandablePanel:handle="@+id/expand"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@id/userComment"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            
+            android:fadingEdge="vertical"
+            android:textSize="@dimen/text_size_medium"
+            android:text="Сворачиваемый блок текста " />
+
+        <Button
+            android:id="@id/expand"
+            android:layout_width="wrap_content"
+            android:layout_height="20dip"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/userComment"
+            android:layout_marginTop="0dip"
+            android:gravity="center_vertical|center_horizontal"
+            android:padding="0dip"
+            android:text=">" />
+    </ru.android.hellslade.autochmo.ExpandablePanel>
+
+</RelativeLayout>

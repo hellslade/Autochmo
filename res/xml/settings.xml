@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+    <PreferenceCategory
+    	android:title="@string/preferenceAuth"> 
+        <EditTextPreference 
+        	android:key="@string/loginKey"
+        	android:title="@string/loginTitle"
+        	android:summary="@string/loginSummary"        	
+        	android:defaultValue="" />
+       	<EditTextPreference 
+        	android:key="@string/passwordKey"
+        	android:title="@string/passwordTitle"
+        	android:summary="@string/passwordSummary"
+        	android:inputType="textPassword"        	
+        	android:defaultValue="" />
+	</PreferenceCategory>
+    <PreferenceCategory
+    	android:title="@string/preferenceOther"> 
+        <EditTextPreference 
+        	android:key="@string/factCountKey"
+        	android:title="@string/factCountTitle"
+        	android:summary="@string/factCountSummary"        	
+        	android:defaultValue="5" />
+       	<CheckBoxPreference
+        	android:key="@string/lazyLoadKey"
+        	android:title="@string/lazyLoadTitle"
+        	android:summary="@string/lazyLoadSummary"
+        	android:defaultValue="1" />
+    </PreferenceCategory>
+</PreferenceScreen>

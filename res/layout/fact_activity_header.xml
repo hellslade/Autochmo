@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+    
+    <TextView
+        android:id="@+id/carmodelTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="10dip"
+        android:layout_marginTop="10dip"
+        android:visibility="gone"
+        android:text="Mersedes Benz E250"
+        android:textSize="@dimen/text_size_medium" />
+    <Gallery
+        android:id="@+id/pictureGallery"
+        android:layout_width="fill_parent"
+        android:layout_marginTop="10dip"
+        android:layout_height="wrap_content" />
+
+    <ImageView
+        android:id="@+id/factImageView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/pictureGallery"
+        android:gravity="center"
+        />
+    <TextView
+        android:id="@+id/dateTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/factImageView"
+        android:text="1 ноября 2011"
+        android:textColor="#999999"
+        android:textSize="@dimen/text_size_medium" />
+    <ru.android.hellslade.autochmo.ExpandablePanel
+        xmlns:ExpandablePanel="http://schemas.android.com/apk/res/ru.android.hellslade.autochmo"
+        android:id="@+id/commentTextViewFoo"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/dateTextView"
+        ExpandablePanel:collapsedHeight="40dip"
+        ExpandablePanel:content="@+id/commentTextView"
+        ExpandablePanel:handle="@+id/expand"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@id/commentTextView"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:fadingEdge="vertical"
+            android:text="Сворачиваемый блок текста "
+            android:textSize="@dimen/text_size_medium"
+            android:textStyle="italic" />
+
+        <Button
+            android:id="@id/expand"
+            android:layout_width="wrap_content"
+            android:layout_height="30dip"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/commentTextView"
+            android:layout_marginTop="0dip"
+            android:gravity="center_vertical|center_horizontal"
+            android:padding="5dip"
+            android:textSize="@dimen/text_size_small"
+            android:text="@string/show_more" />
+    </ru.android.hellslade.autochmo.ExpandablePanel>
+</RelativeLayout>

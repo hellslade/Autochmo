@@ -1,0 +1,37 @@
+/**
+	 * Создает не отправленный дефекта.
+	 * 
+	 * @param path
+	 *            Путь до фотографии.
+	 */
+	public void createHole(Uri path) {
+		// Получение местоположение из exif-а изображения.
+		Location location = getExifLocation(path.getPath());
+		if (location == null) {
+			// Получение гео данных из системы.
+			Location gps = ((LocationManager) getSystemService(Context.LOCATION_SERVICE))
+					.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+			Location net = ((LocationManager) getSystemService(Context.LOCATION_SERVICE))
+					.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+			// Определение лучших данных.
+			if (gps != null && net != null) {
+				if (gps.getTime() > net.getTime())
+					location = gps;
+				else if (net.hasAccuracy()) {
+					float[] results = new float[1];
+					Location.distanceBetween(net.getLatitude(),
+							net.getLongitude(), gps.getLatitude(),
+							gps.getLongitude(), results);
+					if (results[0] < net.getAccuracy())
+						location = gps;
+				}
+			} else if (net == null)
+				location = gps;
+		}
+		// Удаление неотправленного дефекта.
+		Hole hole = getHole(null);
+		if (hole != null)
+			holes.remove(hole);
+		// Добавление нового дефекта.
+		holes.add(new Hole(this, path, location));
+	}
