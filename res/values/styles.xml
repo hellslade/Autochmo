@@ -30,7 +30,8 @@
         <item name="android:selectableItemBackground">@drawable/ad_selectable_background</item>
     </style>
     <style name="Widget.Styled.ActionBar" parent="Widget.Sherlock.Light.ActionBar.Solid">
-        <item name="android:textStyle">@style/CustomTitleStyle</item>
+        <item name="titleTextStyle">@style/CustomTitleStyle</item>
+        <item name="android:titleTextStyle">@style/CustomTitleStyle</item>
         <item name="icon">@drawable/ic_action_home</item>
         <item name="android:icon">@drawable/ic_action_home</item>
         <item name="background">@drawable/db_bg</item>
