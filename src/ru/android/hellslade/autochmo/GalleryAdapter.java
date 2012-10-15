@@ -18,6 +18,7 @@ public class GalleryAdapter extends BaseAdapter{
     int GalItemBg;
     private Activity activity;
     private AutochmoApplication mAutochmo;
+    private AsyncImageLoader asyncImageLoader;
     private HashMap<String, SoftReference<Drawable>> images;
     private List<String> image_keys;
     private Gallery gallery;
@@ -30,6 +31,7 @@ public class GalleryAdapter extends BaseAdapter{
         typArray.recycle();
         this.image_keys = image_keys;
         this.images = images;
+        asyncImageLoader = new AsyncImageLoader(activity);
         mAutochmo = (AutochmoApplication)activity.getApplication();
     }
     public int getCount() {
@@ -47,13 +49,14 @@ public class GalleryAdapter extends BaseAdapter{
     	if (imgView == null)
     	{
     		imgView = new ImageView(activity);
+    		imgView.setLayoutParams(new Gallery.LayoutParams(160, 120));
     	}
-    	imgView.setTag(imageUrl);
+//    	imgView.setTag(imageUrl);
     	Log.v(""+mAutochmo.toString());
     	Log.v(""+mAutochmo.imageLoader.toString());
     	Log.v(""+imgView.toString());
     	Log.v(""+imageUrl);
-    	//mAutochmo.imageLoader.displayImage(imageUrl, imgView);
+    	mAutochmo.imageLoader.displayImage(imageUrl, imgView);
 //    	((AutochmoApplication)activity.getApplication()).imageLoader.displayImage(imageUrl, imgView);
 /*    	Drawable cachedImage = asyncImageLoader.loadDrawable(imageUrl, new ImageCallback() {
             public void imageLoaded(Drawable imageDrawable, String imageUrl) {
@@ -66,7 +69,7 @@ public class GalleryAdapter extends BaseAdapter{
             }
         });*/
 //    	images.put(imageUrl, new SoftReference<Drawable>(cachedImage));
-		imgView.setLayoutParams(new Gallery.LayoutParams(160, 120));
+		//imgView.setLayoutParams(new Gallery.LayoutParams(160, 120));
 		//imgView.setScaleType(ImageView.ScaleType.FIT_XY);
 		imgView.setBackgroundResource(GalItemBg);
 //		imgView.setImageDrawable(cachedImage);
