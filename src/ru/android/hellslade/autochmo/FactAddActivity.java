@@ -8,6 +8,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -22,15 +27,11 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Images.ImageColumns;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.view.Menu;
-import android.support.v4.view.MenuItem;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.format.Time;
 import android.text.method.KeyListener;
 import android.view.KeyEvent;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnKeyListener;
@@ -44,7 +45,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-public class FactAddActivity extends FragmentActivity implements OnClickListener, OnItemClickListener {
+public class FactAddActivity extends SherlockFragmentActivity implements OnClickListener, OnItemClickListener {
     private class getCarmodels extends AsyncTask<Void, Void, List<Carmodel>> {
     	@Override
     	protected List<Carmodel> doInBackground(Void... params) {
@@ -252,7 +253,7 @@ public class FactAddActivity extends FragmentActivity implements OnClickListener
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
+        MenuInflater inflater = getSupportMenuInflater();
         inflater.inflate(R.menu.menu_add_comment, menu);
         return super.onCreateOptionsMenu(menu);
     }

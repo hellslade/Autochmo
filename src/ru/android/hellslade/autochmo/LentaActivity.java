@@ -9,17 +9,17 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.markupartist.android.widget.PullToRefreshListView;
 import com.markupartist.android.widget.PullToRefreshListView.OnRefreshListener;
 
-public class LentaActivity extends FragmentActivity {
+public class LentaActivity extends SherlockFragmentActivity {
     class GetFactTask extends AsyncTask<Integer, Integer, List<Fact>> {
     	ProgressDialog pg = new ProgressDialog(LentaActivity.this);
     	@Override
