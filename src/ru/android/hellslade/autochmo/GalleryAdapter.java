@@ -16,8 +16,8 @@ import android.widget.ImageView;
 
 public class GalleryAdapter extends BaseAdapter{
     int GalItemBg;
-    private AsyncImageLoader asyncImageLoader;
     private Activity activity;
+    private AutochmoApplication mAutochmo;
     private HashMap<String, SoftReference<Drawable>> images;
     private List<String> image_keys;
     private Gallery gallery;
@@ -30,7 +30,7 @@ public class GalleryAdapter extends BaseAdapter{
         typArray.recycle();
         this.image_keys = image_keys;
         this.images = images;
-        asyncImageLoader = new AsyncImageLoader(activity);
+        mAutochmo = (AutochmoApplication)activity.getApplication();
     }
     public int getCount() {
     	return image_keys.size();
@@ -49,8 +49,13 @@ public class GalleryAdapter extends BaseAdapter{
     		imgView = new ImageView(activity);
     	}
     	imgView.setTag(imageUrl);
-
-    	Drawable cachedImage = asyncImageLoader.loadDrawable(imageUrl, new ImageCallback() {
+    	Log.v(""+mAutochmo.toString());
+    	Log.v(""+mAutochmo.imageLoader.toString());
+    	Log.v(""+imgView.toString());
+    	Log.v(""+imageUrl);
+    	//mAutochmo.imageLoader.displayImage(imageUrl, imgView);
+//    	((AutochmoApplication)activity.getApplication()).imageLoader.displayImage(imageUrl, imgView);
+/*    	Drawable cachedImage = asyncImageLoader.loadDrawable(imageUrl, new ImageCallback() {
             public void imageLoaded(Drawable imageDrawable, String imageUrl) {
             	images.put(imageUrl, new SoftReference<Drawable>(imageDrawable));
             	ImageView imageViewByTag = (ImageView) gallery.findViewWithTag(imageUrl);
@@ -59,12 +64,12 @@ public class GalleryAdapter extends BaseAdapter{
             	imageViewByTag.setBackgroundResource(GalItemBg);
             	imageViewByTag.setImageDrawable(imageDrawable);
             }
-        });
-    	images.put(imageUrl, new SoftReference<Drawable>(cachedImage));
+        });*/
+//    	images.put(imageUrl, new SoftReference<Drawable>(cachedImage));
 		imgView.setLayoutParams(new Gallery.LayoutParams(160, 120));
 		//imgView.setScaleType(ImageView.ScaleType.FIT_XY);
 		imgView.setBackgroundResource(GalItemBg);
-		imgView.setImageDrawable(cachedImage);
+//		imgView.setImageDrawable(cachedImage);
     	return imgView;
     }
 }

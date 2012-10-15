@@ -2,9 +2,7 @@ package ru.android.hellslade.autochmo;
 
 import java.util.List;
 
-import ru.android.hellslade.autochmo.AsyncImageLoader.ImageCallback;
 import android.app.Activity;
-import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,13 +13,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 public class FactListAdapter extends ArrayAdapter<Fact> {
-	private AsyncImageLoader asyncImageLoader;
+	private AutochmoApplication mAutochmo;
 	private ListView listView;
 	
     public FactListAdapter(Activity activity, List<Fact> facts, ListView listView) {
         super(activity, 0, facts);
         this.listView = listView;
-        asyncImageLoader = new AsyncImageLoader(activity);
+        mAutochmo = (AutochmoApplication)activity.getApplication();
     }
  
     @Override
@@ -41,15 +39,16 @@ public class FactListAdapter extends ArrayAdapter<Fact> {
         Fact fact = getItem(position);
  
         // Load the image and set it on the ImageView
+        ImageView imageView = viewCache.getImageView();
         String picture_small_url = fact.getPictureSmall(0);
-        String imageUrl = asyncImageLoader.EMPTY_IMAGE;
+//        String imageUrl = asyncImageLoader.EMPTY_IMAGE;
         if (!TextUtils.isEmpty(picture_small_url))
         {
-        	imageUrl = activity.getString(R.string.host_image)+picture_small_url;
+        	mAutochmo.imageLoader.displayImage(activity.getString(R.string.host_image)+picture_small_url, imageView);
+//        	imageUrl = activity.getString(R.string.host_image)+picture_small_url;
         }
-        ImageView imageView = viewCache.getImageView();
-        imageView.setTag(imageUrl);
-        Drawable cachedImage = asyncImageLoader.loadDrawable(imageUrl, new ImageCallback() {
+//        imageView.setTag(imageUrl);
+/*        Drawable cachedImage = asyncImageLoader.loadDrawable(imageUrl, new ImageCallback() {
             public void imageLoaded(Drawable imageDrawable, String imageUrl) {
                 ImageView imageViewByTag = (ImageView) listView.findViewWithTag(imageUrl);
                 if (imageViewByTag != null) {
@@ -58,7 +57,7 @@ public class FactListAdapter extends ArrayAdapter<Fact> {
             }
         });
         imageView.setImageDrawable(cachedImage);
- 
+*/ 
         // Set the text on the TextView
         //TextView factNomerView = viewCache.getfactNomerView();
         //factNomerView.setText(String.format("%s", fact.getGosnomer().toUpperCase()));

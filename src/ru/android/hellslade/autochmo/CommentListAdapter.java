@@ -2,9 +2,7 @@ package ru.android.hellslade.autochmo;
 
 import java.util.List;
 
-import ru.android.hellslade.autochmo.AsyncImageLoader.ImageCallback;
 import android.app.Activity;
-import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,13 +14,15 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 public class CommentListAdapter  extends ArrayAdapter<Comment> {
-	private AsyncImageLoader asyncImageLoader;
+//	private AsyncImageLoader asyncImageLoader;
+	private AutochmoApplication mAutochmo;
 	private ListView listView;
 	
     public CommentListAdapter(Activity activity, List<Comment> comments, ListView listView) {
         super(activity, 0, comments);
         this.listView = listView;
-        asyncImageLoader = new AsyncImageLoader(activity);
+//        asyncImageLoader = new AsyncImageLoader(activity);
+        mAutochmo = (AutochmoApplication)activity.getApplication();
     }
     ExpandablePanel.OnExpandListener listener = new ExpandablePanel.OnExpandListener() {
         @Override
@@ -50,8 +50,9 @@ public class CommentListAdapter  extends ArrayAdapter<Comment> {
         // Load the image and set it on the ImageView
         String imageUrl = activity.getString(R.string.host_image)+comment.getUserPicture();
         ImageView imageView = (ImageView) convertView.findViewById(R.id.userPicture);
-        imageView.setTag(imageUrl);
-        Drawable cachedImage = asyncImageLoader.loadDrawable(imageUrl, new ImageCallback() {
+        mAutochmo.imageLoader.displayImage(imageUrl, imageView);
+//        imageView.setTag(imageUrl);
+/*        Drawable cachedImage = asyncImageLoader.loadDrawable(imageUrl, new ImageCallback() {
             public void imageLoaded(Drawable imageDrawable, String imageUrl) {
                 ImageView imageViewByTag = (ImageView) listView.findViewWithTag(imageUrl);
                 if (imageViewByTag != null) {
@@ -60,7 +61,7 @@ public class CommentListAdapter  extends ArrayAdapter<Comment> {
             }
         });
         imageView.setImageDrawable(cachedImage);
- 
+*/ 
         // Set the text on the TextView
         TextView userComment = (TextView)convertView.findViewById(R.id.userComment);
         userComment.setText(comment.getText());
