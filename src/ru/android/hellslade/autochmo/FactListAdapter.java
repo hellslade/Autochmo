@@ -54,12 +54,8 @@ public class FactListAdapter extends ArrayAdapter<Fact> {
  
         // Load the image and set it on the ImageView
         ImageView imageView = viewCache.getImageView();
-        String picture_small_url = fact.getPictureSmall(0);
-        if (!TextUtils.isEmpty(picture_small_url))
-        {
-        	String imageUrl = activity.getString(R.string.host_image)+picture_small_url;
-        	mAutochmo.imageLoader.displayImage(imageUrl, imageView);
-        }
+    	String imageUrl = activity.getString(R.string.host_image)+fact.getPictureSmall(0);
+    	mAutochmo.imageLoader.displayImage(imageUrl, imageView);
 
         // Set the text on the TextView
         //TextView factNomerView = viewCache.getfactNomerView();
