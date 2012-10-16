@@ -1,9 +1,15 @@
 package ru.android.hellslade.autochmo;
 
+import java.net.URLEncoder;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import android.app.Activity;
 import android.text.TextUtils;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,17 +57,6 @@ public class CommentListAdapter  extends ArrayAdapter<Comment> {
         String imageUrl = activity.getString(R.string.host_image)+comment.getUserPicture();
         ImageView imageView = (ImageView) convertView.findViewById(R.id.userPicture);
         mAutochmo.imageLoader.displayImage(imageUrl, imageView);
-//        imageView.setTag(imageUrl);
-/*        Drawable cachedImage = asyncImageLoader.loadDrawable(imageUrl, new ImageCallback() {
-            public void imageLoaded(Drawable imageDrawable, String imageUrl) {
-                ImageView imageViewByTag = (ImageView) listView.findViewWithTag(imageUrl);
-                if (imageViewByTag != null) {
-                    imageViewByTag.setImageDrawable(imageDrawable);
-                }
-            }
-        });
-        imageView.setImageDrawable(cachedImage);
-*/ 
         // Set the text on the TextView
         TextView userComment = (TextView)convertView.findViewById(R.id.userComment);
         userComment.setText(comment.getText());
@@ -75,7 +70,14 @@ public class CommentListAdapter  extends ArrayAdapter<Comment> {
         userLogin.setText(username);
         
         TextView userDate = (TextView)convertView.findViewById(R.id.userDate);
-        userDate.setText(comment.getDatecreatedStr());
+        SimpleDateFormat sdf_parse = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss", Locale.getDefault());
+        try {
+			Date date = sdf_parse.parse(comment.getDatecreatedStr());
+			userDate.setText(DateFormat.getLongDateFormat(activity).format(date) + " " + DateFormat.getTimeFormat(activity).format(date));
+		} catch (ParseException e) {
+			Log.v(e.getMessage());
+			userDate.setText(comment.getDatecreatedStr());
+		}
         
  
         return convertView;

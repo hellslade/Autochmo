@@ -1,12 +1,26 @@
 package ru.android.hellslade.autochmo;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+
+import org.apache.http.client.utils.URIUtils;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.protocol.HTTP;
 
 import android.app.Activity;
 import android.text.TextUtils;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.URLUtil;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -41,23 +55,12 @@ public class FactListAdapter extends ArrayAdapter<Fact> {
         // Load the image and set it on the ImageView
         ImageView imageView = viewCache.getImageView();
         String picture_small_url = fact.getPictureSmall(0);
-//        String imageUrl = asyncImageLoader.EMPTY_IMAGE;
         if (!TextUtils.isEmpty(picture_small_url))
         {
-        	mAutochmo.imageLoader.displayImage(activity.getString(R.string.host_image)+picture_small_url, imageView);
-//        	imageUrl = activity.getString(R.string.host_image)+picture_small_url;
+        	String imageUrl = activity.getString(R.string.host_image)+picture_small_url;
+        	mAutochmo.imageLoader.displayImage(imageUrl, imageView);
         }
-//        imageView.setTag(imageUrl);
-/*        Drawable cachedImage = asyncImageLoader.loadDrawable(imageUrl, new ImageCallback() {
-            public void imageLoaded(Drawable imageDrawable, String imageUrl) {
-                ImageView imageViewByTag = (ImageView) listView.findViewWithTag(imageUrl);
-                if (imageViewByTag != null) {
-                    imageViewByTag.setImageDrawable(imageDrawable);
-                }
-            }
-        });
-        imageView.setImageDrawable(cachedImage);
-*/ 
+
         // Set the text on the TextView
         //TextView factNomerView = viewCache.getfactNomerView();
         //factNomerView.setText(String.format("%s", fact.getGosnomer().toUpperCase()));
@@ -70,7 +73,13 @@ public class FactListAdapter extends ArrayAdapter<Fact> {
         regionView.setText(fact.getGosnomerRegion());
         
         TextView factDateView = viewCache.getfactDateView();
-        factDateView.setText(fact.getDatecreatedStr().split(" ")[0]);
+        SimpleDateFormat sdf_parse = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        try {
+			Date date = sdf_parse.parse(fact.getDatecreatedStr());
+			factDateView.setText(DateFormat.getLongDateFormat(activity).format(date));
+		} catch (ParseException e) {
+			factDateView.setText(fact.getDatecreatedStr().split(" ")[0]);
+		}
         
         TextView factCarmodelView = viewCache.getfactCarmodelView();
         factCarmodelView.setText(String.format("%s %s", fact.getCarModelManufacturer(), fact.getCarModel()));

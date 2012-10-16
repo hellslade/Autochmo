@@ -8,8 +8,9 @@
 
     <ImageView
         android:id="@+id/userPicture"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:scaleType="centerInside"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:background="@color/transparent"

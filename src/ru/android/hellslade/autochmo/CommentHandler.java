@@ -34,6 +34,9 @@ public class CommentHandler extends DefaultHandler {
                 currentComment.setText(builder.toString().trim());
             } else if (localName.equalsIgnoreCase(USERNAME)) {
                 currentComment.setUsername(builder.toString().trim());
+            } else if (localName.equalsIgnoreCase(USERPICTURE)) {
+            	Log.v("userpic " + builder.toString().trim());
+                currentComment.setUserPicture(builder.toString().trim());
             } else if (localName.equalsIgnoreCase(USERSECONDNAME)) {
                 currentComment.setUsersecondname(builder.toString().trim());
             } else if (localName.equalsIgnoreCase(USERLASTNAME)) {

@@ -23,6 +23,7 @@ public class Comment  implements Comparable<Comment>, Parcelable {
     	this._commentId = p.readString();
     	this._text = p.readString();
     	this._username = p.readString();
+    	this._userpicture = p.readString();
     	this._usersecondname = p.readString();
     	this._userlastname = p.readString();
     	this._userlogin = p.readString();
@@ -35,8 +36,8 @@ public class Comment  implements Comparable<Comment>, Parcelable {
         this._userpicture = url;
     }
     public String getUserPicture() {
-    	return "/bitrix/templates/avtochmo/images/userpic_50.png";
-//    	return this._userpicture;
+//    	return "/bitrix/templates/avtochmo/images/userpic_50.png";
+    	return this._userpicture;
     }
     public void setCommentId(String commentId) {
     	this._commentId = commentId;
@@ -111,6 +112,7 @@ public class Comment  implements Comparable<Comment>, Parcelable {
 		parcel.writeString(_commentId);
 		parcel.writeString(_text);
 		parcel.writeString(_username);
+		parcel.writeString(_userpicture);
 		parcel.writeString(_usersecondname);
 		parcel.writeString(_userlastname);
 		parcel.writeString(_userlogin);

@@ -1,22 +1,23 @@
 package ru.android.hellslade.autochmo;
 
-import java.lang.ref.SoftReference;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -91,24 +92,25 @@ public class FactActivity extends SherlockFragmentActivity implements OnClickLis
 			super.onPostExecute(result);
 		}
 	}
+	
 	public static final String FACT = "fact";
 	public static final String COMMENT = "comment";
 	public static final String COUNT = "count";
+	private AutochmoApplication mAutochmo;
 	private Fact fact;
 	private Comment comment;
 	private List<Comment> comments;
 	public ListView commentListView;
 	private Gallery gallery;
     private ImageView imgView;
-    private HashMap<String, SoftReference<Drawable>> images;
     private List<String> image_keys;
     private AutochmoAPI api;
     private static final int REQUEST_ADD_COMMENT = 0x000001;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		mAutochmo = (AutochmoApplication)getApplication();
 		setContentView(R.layout.fact_activity);
-		images = new HashMap<String, SoftReference<Drawable>>();
 		image_keys = new ArrayList<String>();
 		comments = new ArrayList<Comment>();
 		commentListView = (ListView) findViewById(R.id.commentListView);
@@ -138,18 +140,17 @@ public class FactActivity extends SherlockFragmentActivity implements OnClickLis
         ratePlus.setOnClickListener(this);
         
         imgView = (ImageView)findViewById(R.id.factImageView);
-        //ImageView imageView = (ImageView)findViewById(R.id.factImageView);
         imgView.setOnClickListener(new OnClickListener() {
             
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent();
+            	Integer position = (Integer) imgView.getTag();
+            	String imageURL = getString(R.string.host_image)+fact.getPictureOriginal(position);
+//            	Log.v("imageURL" + imageURL);
+
+            	Intent intent = new Intent();
                 intent.setAction(Intent.ACTION_VIEW);
-                String fileSource = (String) imgView.getTag();
-                Log.v("fileSource" + fileSource);
-                String filePath = getExternalCacheDir() + "/.image-cache/" + fileSource.hashCode() + ".jpg";
-                //intent.setDataAndType(Uri.parse(fileSource), "image/*");
-                intent.setDataAndType(Uri.parse("file://" + filePath), "image/*");
+                intent.setDataAndType(Uri.parse("file://" + imageURL), "image/*");
                 startActivity(intent);
             }
         });
@@ -218,15 +219,14 @@ public class FactActivity extends SherlockFragmentActivity implements OnClickLis
     };
 	public void fillData() {
 		image_keys.clear();
-		images.clear();
 		for (int i = 0; i < fact.getPictureCount(); i++)
 		{
-			Log.v("i = " + i);
+//			Log.v("i = " + i);
 			image_keys.add(getString(R.string.host_image)+fact.getPictureMedium(i).trim());
 		}
 //		http://www.androidpeople.com/android-gallery-imageview-example
         gallery = (Gallery) findViewById(R.id.pictureGallery);
-        GalleryAdapter adt = new GalleryAdapter(this, image_keys, images, gallery);
+        GalleryAdapter adt = new GalleryAdapter(this, image_keys, gallery);
 		gallery.setAdapter(adt);
 		gallery.setOnItemClickListener(onItemClickListener);
 		
@@ -260,7 +260,14 @@ public class FactActivity extends SherlockFragmentActivity implements OnClickLis
 		carmodelTextView.setText(String.format("%s %s", fact.getCarModelManufacturer(), fact.getCarModel()));
 		
 		TextView dateTextView = (TextView)findViewById(R.id.dateTextView);
-		dateTextView.setText(" " + fact.getDatecreatedStr());
+		
+		SimpleDateFormat sdf_parse = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+		try {
+			Date date = sdf_parse.parse(fact.getDatecreatedStr());
+			dateTextView.setText(DateFormat.getLongDateFormat(getApplicationContext()).format(date) + " " + DateFormat.getTimeFormat(getApplicationContext()).format(date));
+		} catch (ParseException e) {
+			dateTextView.setText(" " + fact.getDatecreatedStr());
+		}
 		
 		
 	};
@@ -287,12 +294,11 @@ public class FactActivity extends SherlockFragmentActivity implements OnClickLis
 	OnItemClickListener onItemClickListener = new OnItemClickListener()
 	{
 		public void onItemClick(AdapterView parent, View v, int position, long id) {
-/*			Log.v("Position " + position);
-			Log.v("images.size() " + images.size());
-*/			
-			String imageUrl = (String)v.getTag();
-			imgView.setImageDrawable((Drawable)images.get(imageUrl).get());
-			imgView.setTag(imageUrl);
+			String imageURL = getString(R.string.host_image)+fact.getPictureMedium(position);
+//			Log.v("Position " + position);
+//			Log.v("imageURL " + imageURL);
+			mAutochmo.imageLoader.displayImage(imageURL, imgView);
+			imgView.setTag(position);
         }
 	};
 }

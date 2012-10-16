@@ -9,6 +9,7 @@ public abstract class CommentBaseParser implements CommentXMLParser{
 	static final String COMMENT = "comment";
 	static final String TEXT = "text";
 	static final String USERNAME = "username";
+	static final String USERPICTURE = "userpic";
 	static final String USERSECONDNAME = "usersecondname";
 	static final String USERLASTNAME = "userlastname";
 	static final String USERLOGIN = "userlogin";

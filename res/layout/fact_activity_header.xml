@@ -16,7 +16,7 @@
         android:textSize="@dimen/text_size_medium" />
     <Gallery
         android:id="@+id/pictureGallery"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_marginTop="10dip"
         android:layout_height="wrap_content" />
 
@@ -24,6 +24,7 @@
         android:id="@+id/factImageView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:scaleType="center"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/pictureGallery"
         android:gravity="center"
