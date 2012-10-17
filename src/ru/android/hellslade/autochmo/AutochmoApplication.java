@@ -371,20 +371,26 @@ public class AutochmoApplication extends Application {
 					.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 			// Определение лучших данных.
 			if (gps != null && net != null) {
-				if (gps.getTime() > net.getTime())
+				if (gps.getTime() > net.getTime()) {
 					location = gps;
-				else if (net.hasAccuracy()) {
+				} else if (net.hasAccuracy()) {
 					float[] results = new float[1];
 					Location.distanceBetween(net.getLatitude(),
 							net.getLongitude(), gps.getLatitude(),
 							gps.getLongitude(), results);
-					if (results[0] < net.getAccuracy())
+					if (results[0] < net.getAccuracy()) {
 						location = gps;
+					} else {
+						location = net;
+					}
+				} else {
+					location = net;
 				}
-			} else if (net == null)
+			} else if (net == null) {
 				location = gps;
-			else if (gps == null)
+			} else if (gps == null) {
 				location = net;
+			}
 		}
 		Log.v("get_location " + location);
 		return location;

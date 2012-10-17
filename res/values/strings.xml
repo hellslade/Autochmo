@@ -8,16 +8,17 @@
     <string name="app_name_add_fact">åвточмо: Новый факт</string>
     <string name="app_name_add_comment">åвточмо: Новый комментарий</string>
 
-    <string name="authorize">http://xml.autochmo.ru/authorize/</string>
+<!--     <string name="authorize">http://xml.autochmo.ru/authorize/</string>
     <string name="checkauth">http://xml.autochmo.ru/checkauth/</string>
     <string name="host">http://xml.autochmo.ru/</string>
     <string name="host_image">http://autochmo.ru</string>
-  <!--
+ -->  
+  
     <string name="authorize">http://xml-avtochmo.greensight.ru/authorize/</string>
     <string name="checkauth">http://xml-avtochmo.greensight.ru/checkauth/</string>
     <string name="host">http://xml-avtochmo.greensight.ru/</string>
     <string name="host_image">http://avtochmo.greensight.ru/</string>
--->
+
  
     <string name="connection_failed">Отсутствует подключение к интернет</string>
         
