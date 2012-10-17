@@ -42,7 +42,7 @@ public class LentaActivity extends SherlockFragmentActivity {
     }
     public SharedPreferences settings;
     FactListAdapter mAdapter;
-    public String passwordHash;
+//    public String passwordHash;
     private int mOffset = 0;
     private int mLimit;
     private AutochmoApplication mAutochmo;
@@ -96,15 +96,9 @@ public class LentaActivity extends SherlockFragmentActivity {
     {
         public void onItemClick(AdapterView listView, View view, int pos, long id) {
             Fact f = mAdapter.getItem(pos - 1);
-            List<Comment> comments = mAutochmo._getComment(f.getFactId());
             Intent intent = new Intent();
             intent.setClass(LentaActivity.this, FactActivity.class);
             intent.putExtra(FactActivity.FACT, f);
-            intent.putExtra(FactActivity.COUNT, comments.size());
-            for (int i = 0; i < comments.size(); i++)
-            {
-                intent.putExtra(FactActivity.COMMENT+i, comments.get(i));
-            }
             startActivity(intent);
         }
     };

@@ -14,7 +14,6 @@ import com.actionbarsherlock.view.MenuItem;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.format.DateFormat;
@@ -45,12 +44,17 @@ public class FactActivity extends SherlockFragmentActivity implements OnClickLis
 		}
 		@Override
 		protected void onPostExecute(List<Comment> result) {
-			comments = result;
-	        commentListView.setAdapter(null);
-	        CommentListAdapter listAdapter = new CommentListAdapter(FactActivity.this, comments, commentListView);
-	        commentListView.setAdapter(listAdapter);
-	        commentListView.invalidateViews();
 			pg.dismiss();
+			if (mAdapter == null) {
+				mAdapter = new CommentListAdapter(FactActivity.this, result, commentListView);
+				commentListView.setAdapter(mAdapter);
+			} else {
+				mAdapter.clear();
+				for (Comment c : result) {
+					mAdapter.add(c);
+				}
+			}
+//	        commentListView.invalidateViews();
 			super.onPostExecute(result);
 		}
 	}
@@ -94,11 +98,8 @@ public class FactActivity extends SherlockFragmentActivity implements OnClickLis
 	}
 	
 	public static final String FACT = "fact";
-	public static final String COMMENT = "comment";
-	public static final String COUNT = "count";
 	private Fact fact;
-	private Comment comment;
-	private List<Comment> comments;
+	private CommentListAdapter mAdapter;
 	public ListView commentListView;
 	private Gallery gallery;
     private ImageView imgView;
@@ -111,23 +112,16 @@ public class FactActivity extends SherlockFragmentActivity implements OnClickLis
 		mAutochmo = (AutochmoApplication)getApplication();
 		setContentView(R.layout.fact_activity);
 		image_keys = new ArrayList<String>();
-		comments = new ArrayList<Comment>();
+
 		commentListView = (ListView) findViewById(R.id.commentListView);
 		mAutochmo = (AutochmoApplication)getApplication();
 		
 		Bundle extras = getIntent().getExtras();
 		fact = extras.getParcelable(FACT);
-		int count = extras.getInt(COUNT);
-//		for (int i = count-1; i > -1; i--)
-		for (int i = 0; i < count ; i++)
-		{
-			comment = extras.getParcelable(COMMENT+i);
-			comments.add(comment);
-		}
-		ListView mListView = (ListView) findViewById(R.id.commentListView);
+
 		LayoutInflater inflater = getLayoutInflater();
         View v = inflater.inflate(R.layout.fact_activity_header, null);
-		mListView.addHeaderView(v);
+        commentListView.addHeaderView(v);
 		
 		ExpandablePanel panel = (ExpandablePanel) findViewById(R.id.commentTextViewFoo);
 		panel.setOnExpandListener(listener);
@@ -139,20 +133,7 @@ public class FactActivity extends SherlockFragmentActivity implements OnClickLis
         ratePlus.setOnClickListener(this);
         
         imgView = (ImageView)findViewById(R.id.factImageView);
-        /*imgView.setOnClickListener(new OnClickListener() {
-            // Изображения будут открываться в новой активити с вьюпейджером
-            @Override
-            public void onClick(View v) {
-            	Integer position = (Integer) imgView.getTag();
-            	String imageURL = getString(R.string.host_image)+fact.getPictureOriginal(position);
-//            	Log.v("imageURL" + imageURL);
-
-            	Intent intent = new Intent();
-                intent.setAction(Intent.ACTION_VIEW);
-                intent.setDataAndType(Uri.parse("file://" + imageURL), "image/*");
-                startActivity(intent);
-            }
-        });*/
+        
         fillData();
 	}
 	@Override
@@ -184,15 +165,6 @@ public class FactActivity extends SherlockFragmentActivity implements OnClickLis
 	        }
 	     }
 	    super.onActivityResult(requestCode, resultCode, data);
-	}
-	public void reloadComments_old() {
-	    // перезагрузить комментарии
-        ListView commentListView = (ListView) findViewById(R.id.commentListView);
-        comments = mAutochmo._getComment(fact.getFactId());
-        commentListView.setAdapter(null);
-        CommentListAdapter listAdapter = new CommentListAdapter(FactActivity.this, comments, commentListView);
-        commentListView.setAdapter(listAdapter);
-        commentListView.invalidateViews();
 	}
 	public void onClick(View v) {
 	    switch (v.getId()) {
@@ -229,16 +201,11 @@ public class FactActivity extends SherlockFragmentActivity implements OnClickLis
 		gallery.setAdapter(adt);
 		gallery.setOnItemClickListener(onItemClickListener);
 		
-		ListView commentListView = (ListView) findViewById(R.id.commentListView);
-		CommentListAdapter listAdapter = new CommentListAdapter(FactActivity.this, comments, commentListView);
-		commentListView.setAdapter(listAdapter);
+		new RefreshTask().execute();
 		
         TextView commentTextView = (TextView)findViewById(R.id.commentTextView);
 		commentTextView.setText(fact.getComment());
-		/*
-		TextView numberTextView = (TextView)findViewById(R.id.numberTextView);
-		numberTextView.setText(fact.getGosnomer().toUpperCase());
-		*/
+
 		TextView nomerTextView = (TextView)findViewById(R.id.nomerView);
 		nomerTextView.setText(fact.getGosnomerNomer().toUpperCase());
         
