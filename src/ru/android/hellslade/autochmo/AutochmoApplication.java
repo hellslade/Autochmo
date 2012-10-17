@@ -112,12 +112,14 @@ public class AutochmoApplication extends Application {
 	}
 
 	public List<Fact> _getFactList(int offset, int count) {
+		return _getFactList(offset, count, "");
+	}
+	public List<Fact> _getFactList(int offset, int count, String gosnomer) {
 		// Add your data
-		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-		nameValuePairs.add(new BasicNameValuePair("limit", String
-				.valueOf(count)));
-		nameValuePairs.add(new BasicNameValuePair("offset", String
-				.valueOf(offset)));
+		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);
+		nameValuePairs.add(new BasicNameValuePair("limit", String.valueOf(count)));
+		nameValuePairs.add(new BasicNameValuePair("offset", String.valueOf(offset)));
+		nameValuePairs.add(new BasicNameValuePair("gosnomer", gosnomer));
 		String responseString = SendDataGet(mHost, nameValuePairs);
 		if (responseString == null)
 			return null;

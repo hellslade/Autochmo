@@ -2,11 +2,13 @@ package ru.android.hellslade.autochmo;
 
 import java.util.List;
 
+import android.app.SearchManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.SearchRecentSuggestions;
 import android.text.format.DateUtils;
 import android.view.View;
 import android.widget.AdapterView;
@@ -15,6 +17,9 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnLastItemVisibleListener;
@@ -26,7 +31,7 @@ public class LentaActivity extends SherlockFragmentActivity {
 		protected List<Fact> doInBackground(Integer... params) {
 			if (params.length > 0 && params[0] != null) 
 			    mOffset = params[0];
-			List<Fact> facts = mAutochmo._getFactList(mOffset, mLimit);
+			List<Fact> facts = mAutochmo._getFactList(mOffset, mLimit, mGosnomer);
 	        if (facts == null)
 	        {
 	            Toast.makeText(LentaActivity.this, R.string.connection_failed, Toast.LENGTH_LONG).show();
@@ -45,6 +50,7 @@ public class LentaActivity extends SherlockFragmentActivity {
 //    public String passwordHash;
     private int mOffset = 0;
     private int mLimit;
+    private String mGosnomer = "";
     private AutochmoApplication mAutochmo;
     private PullToRefreshListView imageListView;
 
@@ -76,10 +82,36 @@ public class LentaActivity extends SherlockFragmentActivity {
         mAutochmo = (AutochmoApplication)getApplication();
         mLimit = Integer.valueOf(settings.getString(getString(R.string.factCountKey), "30"));
         imageListView.getRefreshableView().setOnItemClickListener(itemClickListener);
-        // Получить список фактов
         imageListView.setRefreshing(true);
-        new GetFactTask().execute(0);
+        // Get the intent, verify the action and get the query
+        Intent intent = getIntent();
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+          mGosnomer = intent.getStringExtra(SearchManager.QUERY);
+          setTitle(getResources().getString(R.string.app_name) + ": " + mGosnomer);
+          //Создаем экземпляр SearchRecentSuggestions
+          SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this, SuggestionProvider.AUTHORITY, SuggestionProvider.MODE);
+          //Сохраняем запрос
+          suggestions.saveRecentQuery(mGosnomer, null); 
+        }	
+        // Получить список фактов
+    	new GetFactTask().execute(0);
     }
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+	    MenuInflater inflater = getSupportMenuInflater();
+        inflater.inflate(R.menu.menu_lenta, menu);
+        return super.onCreateOptionsMenu(menu);
+	}
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    switch (item.getItemId()) {
+            case (R.id.itemSearch):
+            	onSearchRequested();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+	}
+
     public void setAdapterToList(List<Fact> facts) {
     	if (mAdapter == null) {
 			mAdapter = new FactListAdapter(LentaActivity.this, facts, imageListView.getRefreshableView());

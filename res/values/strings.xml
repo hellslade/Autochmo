@@ -45,6 +45,8 @@
     <string name="add_comment">Добавить комментарий</string>
     <string name="refresh_comment">Обновить комментарии</string>
     <string name="settings">Настройки</string>
+    <string name="search">Фильтр/Поиск</string>
+    <string name="search_hint">Поиск по госномеру</string>
     <string name="exit">Выход</string>
     <string name="add_comment_save">Сохранить</string>
     <string name="add_comment_cancel">Отменить</string>
