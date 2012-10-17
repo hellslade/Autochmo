@@ -15,13 +15,18 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.protocol.HTTP;
 
 import android.app.Activity;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.URLUtil;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -55,6 +60,10 @@ public class FactListAdapter extends ArrayAdapter<Fact> {
         // Load the image and set it on the ImageView
         ImageView imageView = viewCache.getImageView();
     	String imageUrl = activity.getString(R.string.host_image)+fact.getPictureSmall(0);
+    	if (fact.getVideoCount() != null && Integer.valueOf(fact.getVideoCount()) > 0) {
+    		imageUrl = activity.getString(R.string.host_image)+fact.getVideo(0).getSmall();
+    		Log.v("video url " + imageUrl);
+    	}
     	mAutochmo.imageLoader.displayImage(imageUrl, imageView);
 
         // Set the text on the TextView

@@ -15,27 +15,21 @@ import android.widget.Toast;
 
 public class MainActivity extends SherlockFragmentActivity {
     private Context mContext;
-    private AutochmoAPI api;
+    private AutochmoApplication mAutochmo;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //requestWindowFeature(Window.FEATURE_ACTION_BAR);
-        api = new AutochmoAPI(this);
-        //this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        mAutochmo = (AutochmoApplication)getApplication();
         setContentView(R.layout.main);
         mContext = this;
         bindButtons();
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
     
-    public AutochmoAPI getAPI() {
-        return this.api;
-    }
     private void bindButtons() {
         Button btnNewMessage = (Button) findViewById(R.id.btn_lenta);
         btnNewMessage.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
-                if (!api.isOnline())
+                if (!mAutochmo.isOnline())
                 {
                     Toast.makeText(getApplicationContext(), R.string.connection_failed, Toast.LENGTH_LONG).show();
                     return;

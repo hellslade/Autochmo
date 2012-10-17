@@ -40,10 +40,12 @@ public class Fact implements Comparable<Fact>, Parcelable {
     private String _commentsnum;
     private String _countsgosnomer;
     private String _countscarmodel;
+    private String _video_count;
     private List<String> _picture_original = new ArrayList<String>();
     private List<String> _picture_medium = new ArrayList<String>();
     private List<String> _picture_small = new ArrayList<String>();
     private List<String> _picture_tiny = new ArrayList<String>();
+    private List<Video> _videos = new ArrayList<Video>();
     
     //private Date date;
     public Fact(){
@@ -72,6 +74,7 @@ public class Fact implements Comparable<Fact>, Parcelable {
     	this._commentsnum = in.readString();
     	this._countsgosnomer = in.readString();
     	this._countscarmodel = in.readString();
+    	this._video_count = in.readString();
     	int count = in.readInt();
     	for (int i = 0; i < count; i++) {
       	  String ph = in.readString();
@@ -89,6 +92,10 @@ public class Fact implements Comparable<Fact>, Parcelable {
       	  String ph = in.readString();
       	  this._picture_tiny.add(ph);
       	}
+    	for (int i = 0; i < count; i++) {
+    	  Video video = in.readParcelable(Video.class.getClassLoader());
+    	  this._videos.add(video);
+    	}
 	}
     public int getPictureCount()
     {
@@ -308,6 +315,14 @@ public class Fact implements Comparable<Fact>, Parcelable {
     {
     	return this._countscarmodel;
     }
+    public void setVideoCount(String count)
+    {
+    	this._video_count = count;
+    }
+    public String getVideoCount()
+    {
+    	return this._video_count;
+    }
     public void setPictureOriginal(String src)
     {
     	this._picture_original.add(src);
@@ -356,6 +371,18 @@ public class Fact implements Comparable<Fact>, Parcelable {
 			return "";
 		}
     }
+    public void addVideo(Video v)
+    {
+    	this._videos.add(v);
+    }
+    public Video getVideo(int idx)
+    {
+		try {
+			return this._videos.get(idx);
+		} catch (IndexOutOfBoundsException e) {
+			return null;
+		}
+    }
     
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(_fact_id);
@@ -381,19 +408,23 @@ public class Fact implements Comparable<Fact>, Parcelable {
         parcel.writeString(_commentsnum);
         parcel.writeString(_countsgosnomer);
         parcel.writeString(_countscarmodel);
+        parcel.writeString(_video_count);
         parcel.writeInt(this._picture_original.size());
         for (int k = 0; k < this._picture_original.size(); k++) {
             parcel.writeString(this._picture_original.get(k));
-          }
+        }
         for (int k = 0; k < this._picture_medium.size(); k++) {
             parcel.writeString(this._picture_medium.get(k));
-          }
+        }
         for (int k = 0; k < this._picture_small.size(); k++) {
             parcel.writeString(this._picture_small.get(k));
-          }
+        }
         for (int k = 0; k < this._picture_tiny.size(); k++) {
             parcel.writeString(this._picture_tiny.get(k));
-          }
+        }
+        for (int k = 0; k < this._videos.size(); k++) {
+            parcel.writeParcelable(this._videos.get(k), i);
+        }
     }
     public static final Parcelable.Creator<Fact> CREATOR = new Parcelable.Creator<Fact>() {
     	 

@@ -28,6 +28,7 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@id/pictureGallery"
         android:gravity="center"
+        android:visibility="gone"
         />
     <TextView
         android:id="@+id/dateTextView"

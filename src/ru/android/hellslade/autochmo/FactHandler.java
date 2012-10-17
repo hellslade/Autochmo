@@ -12,12 +12,14 @@ import org.xml.sax.helpers.DefaultHandler;
 public class FactHandler extends DefaultHandler{
     private List<Fact> facts;
     private Fact currentFact;
+    private Video currentVideo;
     private StringBuilder builder;
     private boolean counts;
     private boolean original;
     private boolean medium;
     private boolean small;
     private boolean tiny;
+    private boolean video;
     
     public List<Fact> getFacts(){
         return this.facts;
@@ -62,13 +64,35 @@ public class FactHandler extends DefaultHandler{
             } else if (localName.equalsIgnoreCase(COUNTS)){
             	counts = false;
             } else if (localName.equalsIgnoreCase(ORIGINAL)){
-            	original = false;
+            	if (currentVideo != null) {
+            		currentVideo.setOriginal(builder.toString().trim());
+            	} else {
+            		original = false;
+            	}
             } else if (localName.equalsIgnoreCase(MEDIUM)){
-            	medium = false;
+            	if (currentVideo != null) {
+            		currentVideo.setMedium(builder.toString().trim());
+            	} else {
+            		medium = false;
+            	}
             } else if (localName.equalsIgnoreCase(SMALL)){
-            	small = false;
+            	if (currentVideo != null) {
+            		currentVideo.setSmall(builder.toString().trim());
+            	} else {
+            		small = false;
+            	}
             } else if (localName.equalsIgnoreCase(TINY)){
-            	tiny = false;
+            	if (currentVideo != null) {
+            		currentVideo.setTiny(builder.toString().trim());
+            	} else {
+            		tiny = false;
+            	}
+            } else if (localName.equalsIgnoreCase(VIDEOURL)){
+            	if (currentVideo != null) {
+            		currentVideo.setUrl(builder.toString().trim());
+            	}
+            } else if (localName.equalsIgnoreCase(VIDEOS)){
+            	video = false;
             } else if (localName.equalsIgnoreCase(SRC)){
             	if (original){
             		currentFact.setPictureOriginal(builder.toString().trim());
@@ -78,6 +102,13 @@ public class FactHandler extends DefaultHandler{
         			currentFact.setPictureSmall(builder.toString().trim());
             	} else if (tiny){
         			currentFact.setPictureTiny(builder.toString().trim());
+            	}
+            } else if (localName.equalsIgnoreCase(VIDEO)){
+            	if (!video) {
+            		currentFact.setVideoCount(builder.toString().trim());
+            	} else {
+            		currentFact.addVideo(currentVideo);
+            		currentVideo = null;
             	}
             } else if (localName.equalsIgnoreCase(FACT)){
                 facts.add(currentFact);
@@ -116,6 +147,10 @@ public class FactHandler extends DefaultHandler{
         	} else if (localName.equalsIgnoreCase(CARMODEL) && !counts){
         		currentFact.setCarmodelId(attributes.getValue(0).toString());
         		currentFact.setCarmodelManufacturer(attributes.getValue(1).toString());
+        	} else if (localName.equalsIgnoreCase(VIDEO) && video){
+	    		this.currentVideo = new Video();
+        	} else if (localName.equalsIgnoreCase(VIDEOS)){
+	    		video = true;
         	} else if (localName.equalsIgnoreCase(RATING)){
         		currentFact.setRatingPlus(attributes.getValue(0).toString());
         		currentFact.setRatingMinus(attributes.getValue(1).toString());

@@ -17,6 +17,9 @@ public abstract class FactBaseParser implements FactXMLParser {
 	static final String RATING = "rating";
 	static final String COMMENTSNUM = "commentsnum";
 	static final String COUNTS = "counts";
+	static final String VIDEOS = "videos";
+	static final String VIDEO = "video";
+	static final String VIDEOURL = "url";
 	static final String ORIGINAL = "original";
 	static final String MEDIUM = "medium";
 	static final String SMALL = "small";

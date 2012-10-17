@@ -14,7 +14,7 @@
         android:layout_alignParentTop="true"
         android:paddingLeft="5dip"
         android:paddingRight="5dip" />
-
+	
     <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/numberTextView"

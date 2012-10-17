@@ -31,7 +31,7 @@ public class LentaActivity extends SherlockFragmentActivity {
 		@Override
 		protected List<Fact> doInBackground(Integer... params) {
 			final int count = Integer.valueOf(settings.getString(getString(R.string.factCountKey), factCount_default));
-	        facts = api._getFactList(offset, count);
+	        facts = mAutochmo._getFactList(offset, count);
 	        if (facts == null)
 	        {
 	            Toast.makeText(LentaActivity.this, R.string.connection_failed, Toast.LENGTH_LONG).show();
@@ -56,7 +56,7 @@ public class LentaActivity extends SherlockFragmentActivity {
     public String passwordHash;
     private int offset;
     private String factCount_default;
-    private AutochmoAPI api;
+    private AutochmoApplication mAutochmo;
     private ListView imageListView;
 
     @Override
@@ -74,7 +74,7 @@ public class LentaActivity extends SherlockFragmentActivity {
             }
         });
         settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        api = new AutochmoAPI(this);
+        mAutochmo = (AutochmoApplication)getApplication();
         offset = 0;
         factCount_default = "30";
         imageListView = getListView();
@@ -87,7 +87,7 @@ public class LentaActivity extends SherlockFragmentActivity {
     public void _getFactList(int offset)
     {
         final int count = Integer.valueOf(settings.getString(getString(R.string.factCountKey), factCount_default));
-        facts = api._getFactList(offset, count);
+        facts = mAutochmo._getFactList(offset, count);
         if (facts == null)
         {
             Toast.makeText(this, R.string.connection_failed, Toast.LENGTH_LONG).show();
@@ -106,7 +106,7 @@ public class LentaActivity extends SherlockFragmentActivity {
     {
         public void onItemClick(AdapterView listView, View view, int pos, long id) {
             Fact f = facts.get(pos - 1);
-            List<Comment> comments = api._getComment(f.getFactId());
+            List<Comment> comments = mAutochmo._getComment(f.getFactId());
             Intent intent = new Intent();
             intent.setClass(LentaActivity.this, FactActivity.class);
             intent.putExtra(FactActivity.FACT, f);
@@ -132,7 +132,7 @@ public class LentaActivity extends SherlockFragmentActivity {
                     offset -= count;
                 }
                 offset = offset >= 0 ? offset : 0;
-                facts = api._getFactList(offset, count);
+                facts = mAutochmo._getFactList(offset, count);
             } catch (Exception e) {
                 ;
             }

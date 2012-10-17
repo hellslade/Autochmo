@@ -1,6 +1,5 @@
 package ru.android.hellslade.autochmo;
 
-import java.net.URLEncoder;
 import java.util.List;
 
 import android.app.Activity;

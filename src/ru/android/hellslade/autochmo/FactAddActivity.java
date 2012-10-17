@@ -49,7 +49,7 @@ public class FactAddActivity extends SherlockFragmentActivity implements OnClick
     private class getCarmodels extends AsyncTask<Void, Void, List<Carmodel>> {
     	@Override
     	protected List<Carmodel> doInBackground(Void... params) {
-    		return api._getCarModels(); 
+    		return mAutochmo._getCarModels(); 
     	}
     	@Override
     	protected void onPostExecute(List<Carmodel> result) {
@@ -61,7 +61,7 @@ public class FactAddActivity extends SherlockFragmentActivity implements OnClick
     }
 	private static final int PHOTO_REQUEST_CODE = 0x000002;
     private static final int IMAGE_PICK_REQUEST_CODE = 0x000003;
-    private AutochmoAPI api;
+    private AutochmoApplication mAutochmo;
     //private Uri mPhotoUri;
     private File mPhotoFile;
     public ArrayList<Bitmap> images;
@@ -77,7 +77,7 @@ public class FactAddActivity extends SherlockFragmentActivity implements OnClick
         super.onCreate(savedInstanceState);
         setContentView(R.layout.addfact);
         carmark = (AutoCompleteTextView) findViewById(R.id.carmarkEditText);
-        api = new AutochmoAPI(this);
+        mAutochmo = (AutochmoApplication)getApplication();
         
         ImageButton addShotButton = (ImageButton) findViewById(R.id.buttonAddShot);
         addShotButton.setOnClickListener(this);
@@ -282,7 +282,7 @@ public class FactAddActivity extends SherlockFragmentActivity implements OnClick
                         for (Map.Entry<Bitmap, String> pair : mFiles.entrySet()) {
                             files.put(new File(pair.getValue().toString()).getName(), pair.getValue().toString());
                         }
-                        String result = api._addFact(mCarmodelId, carmodel, desc_str, gosnomer, nonomer, files);
+                        String result = mAutochmo._addFact(mCarmodelId, carmodel, desc_str, gosnomer, nonomer, files);
                         Message message = handler.obtainMessage(0, result);
                         handler.sendMessage(message);
                         pg.dismiss();

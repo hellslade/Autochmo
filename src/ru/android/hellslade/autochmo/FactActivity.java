@@ -41,7 +41,7 @@ public class FactActivity extends SherlockFragmentActivity implements OnClickLis
 		}
 		@Override
 		protected List<Comment> doInBackground(Void... params) {
-	        return api._getComment(fact.getFactId());
+	        return mAutochmo._getComment(fact.getFactId());
 		}
 		@Override
 		protected void onPostExecute(List<Comment> result) {
@@ -64,7 +64,7 @@ public class FactActivity extends SherlockFragmentActivity implements OnClickLis
 		}
 		@Override
 		protected String doInBackground(String... params) {
-			return api.setRate(params[0], params[1]);
+			return mAutochmo.setRate(params[0], params[1]);
 		}
 		@Override
 		protected void onPostExecute(String result) {
@@ -82,7 +82,7 @@ public class FactActivity extends SherlockFragmentActivity implements OnClickLis
 		}
 		@Override
 		protected String doInBackground(String... params) {
-			return api._addComment(params[0], params[1]);
+			return mAutochmo._addComment(params[0], params[1]);
 		}
 		@Override
 		protected void onPostExecute(String result) {
@@ -96,7 +96,6 @@ public class FactActivity extends SherlockFragmentActivity implements OnClickLis
 	public static final String FACT = "fact";
 	public static final String COMMENT = "comment";
 	public static final String COUNT = "count";
-	private AutochmoApplication mAutochmo;
 	private Fact fact;
 	private Comment comment;
 	private List<Comment> comments;
@@ -104,7 +103,7 @@ public class FactActivity extends SherlockFragmentActivity implements OnClickLis
 	private Gallery gallery;
     private ImageView imgView;
     private List<String> image_keys;
-    private AutochmoAPI api;
+    private AutochmoApplication mAutochmo;
     private static final int REQUEST_ADD_COMMENT = 0x000001;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -114,7 +113,7 @@ public class FactActivity extends SherlockFragmentActivity implements OnClickLis
 		image_keys = new ArrayList<String>();
 		comments = new ArrayList<Comment>();
 		commentListView = (ListView) findViewById(R.id.commentListView);
-		api = new AutochmoAPI(this);
+		mAutochmo = (AutochmoApplication)getApplication();
 		
 		Bundle extras = getIntent().getExtras();
 		fact = extras.getParcelable(FACT);
@@ -140,8 +139,8 @@ public class FactActivity extends SherlockFragmentActivity implements OnClickLis
         ratePlus.setOnClickListener(this);
         
         imgView = (ImageView)findViewById(R.id.factImageView);
-        imgView.setOnClickListener(new OnClickListener() {
-            
+        /*imgView.setOnClickListener(new OnClickListener() {
+            // Изображения будут открываться в новой активити с вьюпейджером
             @Override
             public void onClick(View v) {
             	Integer position = (Integer) imgView.getTag();
@@ -153,7 +152,7 @@ public class FactActivity extends SherlockFragmentActivity implements OnClickLis
                 intent.setDataAndType(Uri.parse("file://" + imageURL), "image/*");
                 startActivity(intent);
             }
-        });
+        });*/
         fillData();
 	}
 	@Override
@@ -189,7 +188,7 @@ public class FactActivity extends SherlockFragmentActivity implements OnClickLis
 	public void reloadComments_old() {
 	    // перезагрузить комментарии
         ListView commentListView = (ListView) findViewById(R.id.commentListView);
-        comments = api._getComment(fact.getFactId());
+        comments = mAutochmo._getComment(fact.getFactId());
         commentListView.setAdapter(null);
         CommentListAdapter listAdapter = new CommentListAdapter(FactActivity.this, comments, commentListView);
         commentListView.setAdapter(listAdapter);
@@ -294,11 +293,12 @@ public class FactActivity extends SherlockFragmentActivity implements OnClickLis
 	OnItemClickListener onItemClickListener = new OnItemClickListener()
 	{
 		public void onItemClick(AdapterView parent, View v, int position, long id) {
-			String imageURL = getString(R.string.host_image)+fact.getPictureMedium(position);
+			Toast.makeText(mAutochmo, "Открыть Activity с ViewPager для просмотра", Toast.LENGTH_LONG).show();
+			//String imageURL = getString(R.string.host_image)+fact.getPictureMedium(position);
 //			Log.v("Position " + position);
 //			Log.v("imageURL " + imageURL);
-			mAutochmo.imageLoader.displayImage(imageURL, imgView);
-			imgView.setTag(position);
+			//mAutochmo.imageLoader.displayImage(imageURL, imgView);
+			//imgView.setTag(position);
         }
 	};
 }
