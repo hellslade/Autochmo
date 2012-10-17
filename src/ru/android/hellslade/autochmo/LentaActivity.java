@@ -2,7 +2,10 @@ package ru.android.hellslade.autochmo;
 
 import java.util.List;
 
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -12,6 +15,7 @@ import android.provider.SearchRecentSuggestions;
 import android.text.format.DateUtils;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.SearchView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
@@ -25,6 +29,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnLastItemVisibleListener;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 
+@TargetApi(11)
 public class LentaActivity extends SherlockFragmentActivity {
     class GetFactTask extends AsyncTask<Integer, Void, List<Fact>> {
 		@Override
@@ -54,7 +59,7 @@ public class LentaActivity extends SherlockFragmentActivity {
     private AutochmoApplication mAutochmo;
     private PullToRefreshListView imageListView;
 
-    @Override
+	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.lenta);
@@ -88,6 +93,13 @@ public class LentaActivity extends SherlockFragmentActivity {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
           mGosnomer = intent.getStringExtra(SearchManager.QUERY);
           setTitle(getResources().getString(R.string.app_name) + ": " + mGosnomer);
+/*          int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+          if (currentapiVersion >= android.os.Build.VERSION_CODES.HONEYCOMB) {
+        	  getActionBar().setSubtitle("Поиск: " + mGosnomer);
+          } else {
+        	  setTitle(getResources().getString(R.string.app_name) + ": " + mGosnomer);
+          }*/
+          
           //Создаем экземпляр SearchRecentSuggestions
           SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this, SuggestionProvider.AUTHORITY, SuggestionProvider.MODE);
           //Сохраняем запрос
@@ -98,15 +110,24 @@ public class LentaActivity extends SherlockFragmentActivity {
     }
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
+		super.onCreateOptionsMenu(menu);
 	    MenuInflater inflater = getSupportMenuInflater();
         inflater.inflate(R.menu.menu_lenta, menu);
-        return super.onCreateOptionsMenu(menu);
+        MenuItem searchMenu = menu.findItem(R.id.itemSearch);
+        SearchView searchView = (SearchView) searchMenu.getActionView();
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+
+        if (null!=searchManager) {
+        	searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        }
+        //searchView.setIconifiedByDefault(false);
+        return true;
 	}
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 	    switch (item.getItemId()) {
             case (R.id.itemSearch):
-            	onSearchRequested();
+            	//onSearchRequested();
                 break;
         }
         return super.onOptionsItemSelected(item);
