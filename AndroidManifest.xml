@@ -53,6 +53,11 @@
             android:label="@string/app_name_add_comment"
             android:name=".CommentAddActivity" 
             ></activity>
+        <activity
+            android:screenOrientation="portrait"
+            android:label=""
+            android:name=".ImagePagerActivity" 
+            ></activity>
         <provider android:name=".SuggestionProvider"
             android:authorities="ru.android.hellslade.autochmo.SuggestionProvider" />  
     </application>

@@ -27,26 +27,23 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Images.ImageColumns;
-import android.text.Editable;
 import android.text.InputFilter;
 import android.text.format.Time;
-import android.text.method.KeyListener;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnKeyListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Gallery;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 public class FactAddActivity extends SherlockFragmentActivity implements OnClickListener, OnItemClickListener {
-    private class getCarmodels extends AsyncTask<Void, Void, List<Carmodel>> {
+    private class GetCarmodelsTask extends AsyncTask<Void, Void, List<Carmodel>> {
     	@Override
     	protected List<Carmodel> doInBackground(Void... params) {
     		return mAutochmo._getCarModels(); 
@@ -59,6 +56,65 @@ public class FactAddActivity extends SherlockFragmentActivity implements OnClick
     		super.onPostExecute(result);
     	}
     }
+    private class GetCurrentLocationTask extends AsyncTask<Void, Void, String[]> {
+    	@Override
+    	protected void onPreExecute() {
+    		mLocationView.setText("Определяем местоположение...");
+    		super.onPreExecute();
+    	}
+    	@Override
+    	protected String[] doInBackground(Void... params) {
+    		return mAutochmo.GetCurrentLocation();
+    	}
+    	@Override
+    	protected void onPostExecute(String[] result) {
+    		 mLocationView.setText(result[1]);
+    		 mLocationView.setTag(result[0]);
+    		super.onPostExecute(result);
+    	}
+    }
+    private class SendFactTask extends AsyncTask<Void, Void, String> {
+    	ProgressDialog pg = new ProgressDialog(FactAddActivity.this);
+    	String carmodel_id;
+    	String carmodel;
+    	String desc;
+    	String gosnomer;
+    	String nonomer;
+    	String location;
+    	Map<String, String> files;
+    	@Override
+    	protected void onPreExecute() {
+    		pg.setMessage("Пожалуйста, подождите...");
+    		pg.setTitle("Отправка данных на сервер");
+    		pg.show();
+    		super.onPreExecute();
+    	}
+    	@Override
+    	protected String doInBackground(Void... params) {
+    		return mAutochmo._addFact(carmodel_id, carmodel, desc, gosnomer, nonomer, location, files);
+    	}
+    	@Override
+    	protected void onPostExecute(String result) {
+    		pg.dismiss();
+    		String result_ok = FactAddActivity.this.getResources().getString(R.string.add_fact_ok);
+    		Toast.makeText(FactAddActivity.this, result_ok, Toast.LENGTH_LONG).show();
+    		if (result.equalsIgnoreCase(result_ok)) {
+    			FactAddActivity.this.finish();
+    		}
+    		super.onPostExecute(result);
+    	}
+    	protected void execute(String carmodel_id, String carmodel, String desc, String gosnomer, String nonomer, Map<String, String> files) {
+    		this.carmodel_id = carmodel_id;
+    		this.carmodel = carmodel;
+    		this.desc = desc;
+    		this.gosnomer = gosnomer;
+    		this.nonomer = nonomer;
+    		this.location = (String)mLocationView.getTag();
+    		this.files = files;
+    		this.execute();
+    	}
+    }
+    
 	private static final int PHOTO_REQUEST_CODE = 0x000002;
     private static final int IMAGE_PICK_REQUEST_CODE = 0x000003;
     private AutochmoApplication mAutochmo;
@@ -71,6 +127,7 @@ public class FactAddActivity extends SherlockFragmentActivity implements OnClick
     public String mCarmodelId = "0";
     private Map<Bitmap, String> mFiles = new HashMap<Bitmap, String>();
     private EditText nomerEdit;
+    private TextView mLocationView;
     public AutoCompleteTextView carmark;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +142,8 @@ public class FactAddActivity extends SherlockFragmentActivity implements OnClick
         addImageButton.setOnClickListener(this);
         
         nomerEdit = (EditText) findViewById(R.id.nomerEditText);
+        mLocationView = (TextView)findViewById(R.id.locationbar);
+        mLocationView.setOnClickListener(this);
         nomerEdit.setFilters(new InputFilter[] {new AGosnomerCheck()});
         // TODO: Обрабатывать KeyDown/KeyUp
         /*String[] nomers = new String[]{"н100ка72", "г100пр72", "n100ka86", "h100ky86"};
@@ -92,7 +151,6 @@ public class FactAddActivity extends SherlockFragmentActivity implements OnClick
             AGosnomerCheck gn = new AGosnomerCheck(nomer);
             Log.v(gn.getNomer());
         }*/
-        //
         
         ImageView imageView = (ImageView)findViewById(R.id.imageView);
         imageView.setOnClickListener(new OnClickListener() {
@@ -112,22 +170,21 @@ public class FactAddActivity extends SherlockFragmentActivity implements OnClick
             images = savedInstanceState.getParcelableArrayList("bitmap");
         } else {
             images = new ArrayList<Bitmap>();
+            images.add(null);
         }
         imageAdapter = new  ImageAdapter(this, images);
         gallery.setAdapter(imageAdapter);
 
         gallery.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView parent, View v, int position, long id) {
-                ImageView imgView = (ImageView)findViewById(R.id.imageView);
-                Bitmap bitmap = (Bitmap)images.get(position);
-                imgView.setImageBitmap(bitmap);
-                imgView.setTag(mFiles.get(bitmap));
+//                ImageView imgView = (ImageView)findViewById(R.id.imageView);
+//                Bitmap bitmap = (Bitmap)images.get(position);
+//                imgView.setImageBitmap(bitmap);
+//                imgView.setTag(mFiles.get(bitmap));
             }
         });
-        new getCarmodels().execute();
-        //carmodels = api._getCarModels();
-        //ArrayAdapter<Carmodel> adapter = new ArrayAdapter<Carmodel>(FactAddActivity.this, R.layout.list_item, carmodels);
-        //carmark.setAdapter(adapter);
+        new GetCurrentLocationTask().execute();
+        new GetCarmodelsTask().execute();
         carmark.setOnItemClickListener(this);
     }
     public void onClick(View v) {
@@ -139,6 +196,9 @@ public class FactAddActivity extends SherlockFragmentActivity implements OnClick
             case (R.id.buttonAddImage):
                 // Выбрать изображение из галереи
                 takePicture();
+                break;
+            case (R.id.locationbar):
+                Toast.makeText(this, "Открыть Яндекс.Карты на текущем местоположении.", Toast.LENGTH_LONG).show();
                 break;
         }
     }
@@ -166,6 +226,9 @@ public class FactAddActivity extends SherlockFragmentActivity implements OnClick
         startActivityForResult(intent, IMAGE_PICK_REQUEST_CODE);
     }
     public void updateImageAdapter(Bitmap bitmapPreview) {
+    	if (images.get(0) == null) {
+    		images.remove(0);
+    	}
         images.add(bitmapPreview);
         imageAdapter.notifyDataSetChanged();
         gallery.invalidate();
@@ -267,28 +330,14 @@ public class FactAddActivity extends SherlockFragmentActivity implements OnClick
                 final String desc_str = desc.getText().toString().trim();
                 EditText nomer = (EditText) findViewById(R.id.nomerEditText);
                 final String gosnomer = nomer.getText().toString().trim();
-                final String nonomer = gosnomer.isEmpty() ? "true" : "false";
-                final ProgressDialog pg = ProgressDialog.show(FactAddActivity.this,
-                        "Пожалуйста, подождите...", "Отправка данных на сервер", true);
-                final Handler handler = new Handler() {
-                    @Override
-                    public void handleMessage(Message message) {
-                        Toast.makeText(FactAddActivity.this, (String)message.obj, Toast.LENGTH_SHORT).show();
-                    }
-                };
-                new Thread() {
-                    public void run() {
-                        Map<String, String> files = new HashMap<String, String>();
-                        for (Map.Entry<Bitmap, String> pair : mFiles.entrySet()) {
-                            files.put(new File(pair.getValue().toString()).getName(), pair.getValue().toString());
-                        }
-                        String result = mAutochmo._addFact(mCarmodelId, carmodel, desc_str, gosnomer, nonomer, files);
-                        Message message = handler.obtainMessage(0, result);
-                        handler.sendMessage(message);
-                        pg.dismiss();
-                        FactAddActivity.this.finish();
-                    };
-                }.start();
+                final String nonomer = gosnomer.equalsIgnoreCase("") ? "true" : "false";
+                
+                Map<String, String> files = new HashMap<String, String>();
+                for (Map.Entry<Bitmap, String> pair : mFiles.entrySet()) {
+                    files.put(new File(pair.getValue().toString()).getName(), pair.getValue().toString());
+                }
+                new SendFactTask().execute(mCarmodelId, carmodel, desc_str, gosnomer, nonomer, files);
+
                 break;
             case (R.id.itemCancel):
                 this.finish();

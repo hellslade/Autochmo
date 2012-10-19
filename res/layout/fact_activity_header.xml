@@ -39,37 +39,12 @@
         android:text="1 ноября 2011"
         android:textColor="#999999"
         android:textSize="@dimen/text_size_medium" />
-    <ru.android.hellslade.autochmo.ExpandablePanel
-        xmlns:ExpandablePanel="http://schemas.android.com/apk/res/ru.android.hellslade.autochmo"
-        android:id="@+id/commentTextViewFoo"
+    <TextView
+        android:id="@+id/commentTextView"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/dateTextView"
-        ExpandablePanel:collapsedHeight="40dip"
-        ExpandablePanel:content="@+id/commentTextView"
-        ExpandablePanel:handle="@+id/expand"
-        android:orientation="vertical" >
+        />
 
-        <TextView
-            android:id="@id/commentTextView"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:fadingEdge="vertical"
-            android:text="Сворачиваемый блок текста "
-            android:textSize="@dimen/text_size_medium"
-            android:textStyle="italic" />
-
-        <Button
-            android:id="@id/expand"
-            android:layout_width="wrap_content"
-            android:layout_height="30dip"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@id/commentTextView"
-            android:layout_marginTop="0dip"
-            android:gravity="center_vertical|center_horizontal"
-            android:padding="5dip"
-            android:textSize="@dimen/text_size_small"
-            android:text="@string/show_more" />
-    </ru.android.hellslade.autochmo.ExpandablePanel>
 </RelativeLayout>

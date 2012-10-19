@@ -73,6 +73,7 @@ public class FactActivity extends SherlockFragmentActivity implements OnClickLis
 		@Override
 		protected void onPostExecute(String result) {
 			pg.dismiss();
+			// Как-то надо изменить рейтинг факта (и в ленте тоже обновить)
 			Toast.makeText(FactActivity.this, result, Toast.LENGTH_LONG).show();
 			super.onPostExecute(result);
 		}
@@ -123,9 +124,6 @@ public class FactActivity extends SherlockFragmentActivity implements OnClickLis
         View v = inflater.inflate(R.layout.fact_activity_header, null);
         commentListView.addHeaderView(v);
 		
-		ExpandablePanel panel = (ExpandablePanel) findViewById(R.id.commentTextViewFoo);
-		panel.setOnExpandListener(listener);
-		
 		TextView rateMinus = (TextView) findViewById(R.id.rateMinusTextView);
 		rateMinus.setOnClickListener(this);
 		
@@ -161,7 +159,6 @@ public class FactActivity extends SherlockFragmentActivity implements OnClickLis
 	    if (requestCode == REQUEST_ADD_COMMENT) {
 	        if (resultCode == RESULT_OK) {
 	        	new AddCommentTask().execute(fact.getFactId(), data.getStringExtra("comment"));
-	        	//new RefreshTask().execute();
 	        }
 	     }
 	    super.onActivityResult(requestCode, resultCode, data);
@@ -176,18 +173,6 @@ public class FactActivity extends SherlockFragmentActivity implements OnClickLis
 	            break;
 	    }
 	}
-	ExpandablePanel.OnExpandListener listener = new ExpandablePanel.OnExpandListener() {
-        @Override
-        public void onExpand(View handle, View content) {
-            Button btn = (Button) handle;
-            btn.setText(getResources().getString(R.string.show_less));
-        }
-        @Override
-        public void onCollapse(View handle, View content) {
-            Button btn = (Button) handle;
-            btn.setText(getResources().getString(R.string.show_more));
-        }
-    };
 	public void fillData() {
 		image_keys.clear();
 		for (int i = 0; i < fact.getPictureCount(); i++)
@@ -257,15 +242,22 @@ public class FactActivity extends SherlockFragmentActivity implements OnClickLis
         }
 	    return result;
 	}
+	private void startImageGalleryActivity(int position) {
+		String[] urls = new String[fact.getPictureCount()];
+		for (int i=0; i<fact.getPictureCount(); i++) {
+			urls[i] = this.getResources().getString(R.string.host_image) + fact.getPictureOriginal(i);
+		}
+		
+		Intent intent = new Intent(this, ImagePagerActivity.class);
+		intent.putExtra(ImagePagerActivity.IMAGES, urls);
+		intent.putExtra(ImagePagerActivity.IMAGE_POSITION, position);
+		startActivity(intent);
+	}
 	OnItemClickListener onItemClickListener = new OnItemClickListener()
 	{
 		public void onItemClick(AdapterView parent, View v, int position, long id) {
-			Toast.makeText(mAutochmo, "Открыть Activity с ViewPager для просмотра", Toast.LENGTH_LONG).show();
-			//String imageURL = getString(R.string.host_image)+fact.getPictureMedium(position);
-//			Log.v("Position " + position);
-//			Log.v("imageURL " + imageURL);
-			//mAutochmo.imageLoader.displayImage(imageURL, imgView);
-			//imgView.setTag(position);
+			//Toast.makeText(mAutochmo, "Открыть Activity с ViewPager для просмотра", Toast.LENGTH_LONG).show();
+			startImageGalleryActivity(position);
         }
 	};
 }

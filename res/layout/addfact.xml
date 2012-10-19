@@ -5,25 +5,44 @@
     android:layout_height="fill_parent" >
     <TextView
         android:id="@+id/horizontalbar"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="10dip"
         android:background="@drawable/horizontalbar" 
         />
+    <TextView
+        android:id="@+id/locationbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="50dp"
+        android:gravity="center_vertical"
+        android:drawableRight="@drawable/location_2"
+        android:drawablePadding="10dp"
+        android:layout_below="@id/horizontalbar"
+        android:background="@drawable/locationbar"
+        android:padding="10dp"
+        android:clickable="true"
+        android:textSize="@dimen/text_size_extra_medium"
+        android:layout_margin="5dp"
+        android:textStyle="bold"
+        android:text="Россия, г.Тюмень, ул. Свердлова д.5 кор.2"
+        />
+
     <Gallery
         android:id="@+id/photoGallery"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/horizontalbar"
+        android:layout_below="@id/locationbar"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true" />
+        />
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/photoGallery"
-        android:gravity="center" />
+        android:gravity="center"
+        android:visibility="gone" />
 
     <ImageButton
         android:id="@+id/buttonAddShot"

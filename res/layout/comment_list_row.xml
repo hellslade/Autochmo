@@ -37,37 +37,12 @@
         android:textColor="#999999"
         android:textSize="@dimen/text_size_medium" />
 
-    <ru.android.hellslade.autochmo.ExpandablePanel
-        xmlns:ExpandablePanel="http://schemas.android.com/apk/res/ru.android.hellslade.autochmo"
-        android:id="@+id/foo"
+    <TextView
+        android:id="@+id/userComment"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/userPicture"
         android:layout_alignParentLeft="true"
-        ExpandablePanel:collapsedHeight="30dip"
-        ExpandablePanel:content="@+id/userComment"
-        ExpandablePanel:handle="@+id/expand"
-        android:orientation="vertical" >
-
-        <TextView
-            android:id="@id/userComment"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            
-            android:fadingEdge="vertical"
-            android:textSize="@dimen/text_size_medium"
-            android:text="Сворачиваемый блок текста " />
-
-        <Button
-            android:id="@id/expand"
-            android:layout_width="wrap_content"
-            android:layout_height="20dip"
-            android:layout_alignParentRight="true"
-            android:layout_below="@id/userComment"
-            android:layout_marginTop="0dip"
-            android:gravity="center_vertical|center_horizontal"
-            android:padding="0dip"
-            android:text=">" />
-    </ru.android.hellslade.autochmo.ExpandablePanel>
+        />
 
 </RelativeLayout>

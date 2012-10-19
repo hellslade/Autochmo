@@ -1,6 +1,5 @@
 package ru.android.hellslade.autochmo;
 
-import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -49,9 +48,6 @@ public class CommentListAdapter  extends ArrayAdapter<Comment> {
         LayoutInflater inflater = activity.getLayoutInflater();
         convertView = inflater.inflate(R.layout.comment_list_row, null);
         
-        ExpandablePanel panel = (ExpandablePanel) convertView.findViewById(R.id.foo);
-        panel.setOnExpandListener(listener);
-
         Comment comment = getItem(position);
         // Load the image and set it on the ImageView
         String imageUrl = activity.getString(R.string.host_image)+comment.getUserPicture();

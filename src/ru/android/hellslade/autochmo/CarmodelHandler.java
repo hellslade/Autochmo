@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import static ru.android.hellslade.autochmo.CarmodelBaseParser.*;
@@ -22,7 +23,7 @@ public class CarmodelHandler extends DefaultHandler {
     public void characters(char[] ch, int start, int length)
             throws SAXException {
         super.characters(ch, start, length);
-        builder.append(ch, start, length);
+    	builder.append(ch, start, length);
     }
  
     @Override
@@ -36,7 +37,6 @@ public class CarmodelHandler extends DefaultHandler {
         }
         builder.setLength(0);    
     }
-    
     @Override
     public void startDocument() throws SAXException {
         super.startDocument();

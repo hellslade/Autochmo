@@ -161,6 +161,9 @@ public class AutochmoApplication extends Application {
 			responseString = SendDataPost(mHost + "/getcarmodels",
 					nameValuePairs);
 			saveCarmodels(responseString);
+//			10-17 17:55:28.748: V/Autochmo(1622): [CarmodelParser:parse:27]: At line 1, column 317793: not well-formed (invalid token)
+			// В названии марки нехватает ; после &amp
+//			<model id="10411" manufacturerid="554" manufacturername="Gray &amp">Adams</model>
 			// Log.v(responseString);
 		}
 		Log.v("parser create");
@@ -261,7 +264,53 @@ public class AutochmoApplication extends Application {
 			// Toast.LENGTH_SHORT).show();
 		}
 	}
+	public String[] GetCurrentLocation() {
+		String[] result = new String[2];
+		Location location = get_location();
+		_checkAuth();
+		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
+		nameValuePairs.add(new BasicNameValuePair("login", mLogin));
+		nameValuePairs.add(new BasicNameValuePair("passwordhash", mPasswordhash));
+		nameValuePairs.add(new BasicNameValuePair("geocode", String.format("%s,%s", String.valueOf(location.getLongitude()), String.valueOf(location.getLatitude()))));
+		//65.5530945,57.1583921
 
+		String responseString = SendDataPost(mHost + "/geocode", nameValuePairs);
+		Log.v(responseString);
+		result[0] =  String.format("%s,%s", String.valueOf(location.getLongitude()), String.valueOf(location.getLatitude()));
+		result[1] = _parseXML(responseString, "text");
+		return result;
+		//return parseYandexResponse(responseString);
+//		return responseString;
+	}
+	private String parseYandexResponse(String response) {
+		String result = "Неудалось определить местоположение";
+		
+		InputStream inputStream;
+		inputStream = new ByteArrayInputStream(response.getBytes());
+		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder dBuilder;
+		Document doc;
+		try {
+			dBuilder = dbFactory.newDocumentBuilder();
+			doc = dBuilder.parse(inputStream);
+			doc.getDocumentElement().normalize();
+	
+			doc.getDocumentElement().getNodeName(); //имя корневого тэга
+			NodeList nList = doc.getElementsByTagName("text"); //получаем все теги text
+			for (int nodeIndex = 0; nodeIndex < nList.getLength(); nodeIndex++) { //пробегаем тэги
+				Node nNode = nList.item(nodeIndex);
+				result = nNode.getFirstChild().getNodeValue();
+				return result;
+			}
+		} catch (SAXException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
 	public String _addComment(String factId, String comment) {
 		_checkAuth();
 		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
@@ -293,8 +342,7 @@ public class AutochmoApplication extends Application {
 		}
 	}
 
-	public String _addFact(String carmodel_id, String carmodel, String desc,
-			String gosnomer, String nonomer, Map<String, String> files) {
+	public String _addFact(String carmodel_id, String carmodel, String desc, String gosnomer, String nonomer, String location, Map<String, String> files) {
 		_checkAuth();
 		Map<String, String> nameValuePairs = new HashMap<String, String>();
 		Log.v("carmodel_id " + carmodel_id);
@@ -302,60 +350,30 @@ public class AutochmoApplication extends Application {
 		Log.v("desc " + desc);
 		Log.v("gosnomer " + gosnomer);
 		Log.v("nogosnomer " + nonomer);
-		Location location = null;
 		String latitude = "", longitude = "";
-		ExifInterface exif;
-		try {
-			String fn = files.values().toArray()[0].toString();
-			Log.v("fn " + fn);
-			exif = new ExifInterface(files.values().toArray()[0].toString());
-			geoDegree gps = new geoDegree(exif);
-			longitude = gps.toString().split(",", 2)[1];
-			latitude = gps.toString().split(",", 2)[0];
-			Log.v("Coordinates " + latitude + " " + longitude);
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-			Log.v("Can not get GPS attributes");
-		} finally {
-			location = get_location();
-		}
-		if (location != null) {// && (latitude.isEmpty() ||
-								// longitude.isEmpty())) {
-			latitude = String.valueOf(location.getLatitude());
-			longitude = String.valueOf(location.getLongitude());
-			Log.v("Latitude " + location.getLatitude());
-			Log.v("Longitude " + location.getLongitude());
-		}
+		longitude = location.split(",", 2)[0];
+		latitude = location.split(",", 2)[1];
+		Log.v("Coordinates " + latitude + " " + longitude);
+
 		nameValuePairs.put("login", mLogin);
 		nameValuePairs.put("passwordhash", mPasswordhash);
 		nameValuePairs.put("longitude", longitude);
 		nameValuePairs.put("latitude", latitude);
 		nameValuePairs.put("carmodel_id", carmodel_id);
 		nameValuePairs.put("carmodel", carmodel);
-		nameValuePairs.put("desc",
-				String.format("%s %s %s", desc, latitude, longitude));
+		nameValuePairs.put("desc", String.format("%s \n\r%s", desc, location));
 		nameValuePairs.put("gosnomer", gosnomer);
 		nameValuePairs.put("nogosnomer", nonomer);
-		String responseString = SendDataPost(mHost + "/addfact",
-				nameValuePairs, files);
+		String responseString = SendDataPost(mHost + "/addfact", nameValuePairs, files);
 		Log.v(responseString);
 		String result = _parseXML(responseString, "callresult");
 		if (result.equalsIgnoreCase("ok")) {
 			return this.getString(R.string.add_fact_ok);
-			// Toast.makeText(this.getApplicationContext(),
-			// this.getString(R.string.add_fact_ok),
-			// Toast.LENGTH_SHORT).show();
 		} else if (result.equalsIgnoreCase("fail")) {
 			return this.getString(R.string.add_fact_fail);
-			// Toast.makeText(this.getApplicationContext(),
-			// this.getString(R.string.add_fact_fail),
-			// Toast.LENGTH_SHORT).show();
 		} else {
 			_parseXML(responseString, "error", "code");
 			return mLastErrorText;
-			// Toast.makeText(this.getApplicationContext(), mLastErrorText,
-			// Toast.LENGTH_SHORT).show();
 		}
 	}
 

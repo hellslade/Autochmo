@@ -13,15 +13,13 @@ public class CarmodelParser extends CarmodelBaseParser {
     
     public List<Carmodel> parse() {
         SAXParserFactory factory = SAXParserFactory.newInstance();
-        /*factory.setNamespaceAware(true);
-        factory.setValidating(true);*/
         try {
             SAXParser parser = factory.newSAXParser();
-            /*parser.setProperty
-                ("http://java.sun.com/xml/jaxp/properties/schemaLanguage", 
-                        "http://www.w3.org/2001/XMLSchema");*/
+            
             CarmodelHandler handler = new CarmodelHandler();
+            
             parser.parse(this.getInputStream(), handler);
+            
             return handler.getCarmodels();
         } catch (Exception e) {
             Log.v(e.getMessage());
