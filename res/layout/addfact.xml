@@ -35,22 +35,13 @@
         android:layout_alignParentLeft="true"
         />
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@id/photoGallery"
-        android:gravity="center"
-        android:visibility="gone" />
-
     <ImageButton
         android:id="@+id/buttonAddShot"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_marginTop="10dp"
-        android:layout_below="@id/imageView"
+        android:layout_below="@id/photoGallery"
         android:src="@drawable/ic_menu_photo" />
 
     <ImageButton
@@ -58,7 +49,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:layout_below="@id/imageView"
+        android:layout_below="@id/photoGallery"
         android:layout_toRightOf="@id/buttonAddShot"
         android:src="@drawable/ic_menu_addphoto" />
 

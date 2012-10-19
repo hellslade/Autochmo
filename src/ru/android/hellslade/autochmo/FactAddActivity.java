@@ -96,8 +96,9 @@ public class FactAddActivity extends SherlockFragmentActivity implements OnClick
     	@Override
     	protected void onPostExecute(String result) {
     		pg.dismiss();
+    		Log.v("result: " + result);
     		String result_ok = FactAddActivity.this.getResources().getString(R.string.add_fact_ok);
-    		Toast.makeText(FactAddActivity.this, result_ok, Toast.LENGTH_LONG).show();
+    		Toast.makeText(FactAddActivity.this, result, Toast.LENGTH_LONG).show();
     		if (result.equalsIgnoreCase(result_ok)) {
     			FactAddActivity.this.finish();
     		}
@@ -118,14 +119,12 @@ public class FactAddActivity extends SherlockFragmentActivity implements OnClick
 	private static final int PHOTO_REQUEST_CODE = 0x000002;
     private static final int IMAGE_PICK_REQUEST_CODE = 0x000003;
     private AutochmoApplication mAutochmo;
-    //private Uri mPhotoUri;
     private File mPhotoFile;
-    public ArrayList<Bitmap> images;
     public ImageAdapter imageAdapter;
     public Gallery gallery;
     public List<Carmodel> carmodels;
     public String mCarmodelId = "0";
-    private Map<Bitmap, String> mFiles = new HashMap<Bitmap, String>();
+    private Map<String, String> mFiles = new HashMap<String, String>();
     private EditText nomerEdit;
     private TextView mLocationView;
     public AutoCompleteTextView carmark;
@@ -152,24 +151,12 @@ public class FactAddActivity extends SherlockFragmentActivity implements OnClick
             Log.v(gn.getNomer());
         }*/
         
-        ImageView imageView = (ImageView)findViewById(R.id.imageView);
-        imageView.setOnClickListener(new OnClickListener() {
-            
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setAction(Intent.ACTION_VIEW);
-                ImageView imgView = (ImageView)findViewById(R.id.imageView);
-                String fileSource = (String) imgView.getTag();
-                intent.setDataAndType(Uri.parse("file://" + fileSource), "image/*");
-                startActivity(intent);
-            }
-        });
         gallery = (Gallery) findViewById(R.id.photoGallery);
+        ArrayList<Bitmap> images = new ArrayList<Bitmap>();
         if (savedInstanceState != null) {
-            images = savedInstanceState.getParcelableArrayList("bitmap");
+        	images = savedInstanceState.getParcelableArrayList("bitmap");
         } else {
-            images = new ArrayList<Bitmap>();
+        	images = new ArrayList<Bitmap>();
             images.add(null);
         }
         imageAdapter = new  ImageAdapter(this, images);
@@ -177,6 +164,13 @@ public class FactAddActivity extends SherlockFragmentActivity implements OnClick
 
         gallery.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView parent, View v, int position, long id) {
+            	Bitmap bmp = (Bitmap)imageAdapter.getItem(position);
+            	if (bmp == null) {
+            		// Вызвать диалог добавления файла
+            		takePicture();
+            	} else {
+            		// Показать QuickAction [Удалить, Просмотреть]
+            	}
 //                ImageView imgView = (ImageView)findViewById(R.id.imageView);
 //                Bitmap bitmap = (Bitmap)images.get(position);
 //                imgView.setImageBitmap(bitmap);
@@ -226,10 +220,7 @@ public class FactAddActivity extends SherlockFragmentActivity implements OnClick
         startActivityForResult(intent, IMAGE_PICK_REQUEST_CODE);
     }
     public void updateImageAdapter(Bitmap bitmapPreview) {
-    	if (images.get(0) == null) {
-    		images.remove(0);
-    	}
-        images.add(bitmapPreview);
+        imageAdapter.insert(bitmapPreview, 1);
         imageAdapter.notifyDataSetChanged();
         gallery.invalidate();
     }
@@ -243,14 +234,12 @@ public class FactAddActivity extends SherlockFragmentActivity implements OnClick
                     if (data != null) {
                         bitmap = (Bitmap) data.getExtras().get("data");
                         Log.v("Bitmap size " + bitmap.getWidth() + " " + bitmap.getHeight());
-                        //mFiles.put(bitmap, mPhotoFile.getAbsolutePath());
                         Log.v("Photo path " + mPhotoFile.getAbsolutePath());
                     } else
                         try {
                             bitmap = android.provider.MediaStore.Images.Media
                                     .getBitmap(getContentResolver(), Uri.fromFile(mPhotoFile));
                             Log.v("Getting photo from mPhotoUri");
-                            //mFiles.put(mPhotoFile.getName(), mPhotoFile.getAbsolutePath());
                         } catch (FileNotFoundException e) {
                             e.printStackTrace();
                         } catch (IOException e) {
@@ -258,7 +247,7 @@ public class FactAddActivity extends SherlockFragmentActivity implements OnClick
                         }
                     Bitmap bitmapPreview = scale(bitmap);
                     updateImageAdapter(bitmapPreview);
-                    mFiles.put(bitmapPreview, mPhotoFile.getAbsolutePath());
+                    mFiles.put(mPhotoFile.getName(), mPhotoFile.getAbsolutePath());
                     bitmap.recycle();
                 }
                 break;
@@ -270,11 +259,10 @@ public class FactAddActivity extends SherlockFragmentActivity implements OnClick
                     int idx = cursor.getColumnIndex(ImageColumns.DATA);
                     String fileSrc = cursor.getString(idx);
                     Log.v("Picture:" + fileSrc);
-                    //mFiles.put(new File(fileSrc).getName(), fileSrc);
                     Bitmap bitmap = BitmapFactory.decodeFile(fileSrc); //load preview image
                     Bitmap bitmapPreview = scale(bitmap);
                     updateImageAdapter(bitmapPreview);
-                    mFiles.put(bitmapPreview, fileSrc);
+                    mFiles.put(new File(fileSrc).getName(), fileSrc);
                     bitmap.recycle();
                 }
                 else {
@@ -300,8 +288,6 @@ public class FactAddActivity extends SherlockFragmentActivity implements OnClick
             scaleHeight = ((float) newHeight) / height;
             scaleWidth = scaleHeight;
         }
-//        float scaleWidth = ((float) newWidth) / width;
-//        float scaleHeight = ((float) newHeight) / height;
 
         // create a matrix for the manipulation
         Matrix matrix = new Matrix();
@@ -332,11 +318,11 @@ public class FactAddActivity extends SherlockFragmentActivity implements OnClick
                 final String gosnomer = nomer.getText().toString().trim();
                 final String nonomer = gosnomer.equalsIgnoreCase("") ? "true" : "false";
                 
-                Map<String, String> files = new HashMap<String, String>();
-                for (Map.Entry<Bitmap, String> pair : mFiles.entrySet()) {
-                    files.put(new File(pair.getValue().toString()).getName(), pair.getValue().toString());
-                }
-                new SendFactTask().execute(mCarmodelId, carmodel, desc_str, gosnomer, nonomer, files);
+//                Map<String, String> files = new HashMap<String, String>();
+//                for (Map.Entry<Bitmap, String> pair : mFiles.entrySet()) {
+//                    files.put(new File(pair.getValue().toString()).getName(), pair.getValue().toString());
+//                }
+                new SendFactTask().execute(mCarmodelId, carmodel, desc_str, gosnomer, nonomer, mFiles);
 
                 break;
             case (R.id.itemCancel):
@@ -347,6 +333,10 @@ public class FactAddActivity extends SherlockFragmentActivity implements OnClick
     }
     @Override
     protected void onSaveInstanceState(Bundle outState) {
+    	ArrayList<Bitmap> images = new ArrayList<Bitmap>();
+    	for (int i=0; i<imageAdapter.getCount(); i++) {
+    		images.add(imageAdapter.getItem(i));
+    	}
         outState.putParcelableArrayList("bitmap", images);
         super.onSaveInstanceState(outState);
     }

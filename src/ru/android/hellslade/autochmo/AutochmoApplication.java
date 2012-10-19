@@ -266,6 +266,11 @@ public class AutochmoApplication extends Application {
 	}
 	public String[] GetCurrentLocation() {
 		String[] result = new String[2];
+		if (!isOnline()) {
+			result[0] = "";
+			result[1] = "Отсутствует подключение к интернет";
+			return result;
+		}
 		Location location = get_location();
 		_checkAuth();
 		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
@@ -282,36 +287,10 @@ public class AutochmoApplication extends Application {
 		//return parseYandexResponse(responseString);
 //		return responseString;
 	}
-	private String parseYandexResponse(String response) {
-		String result = "Неудалось определить местоположение";
-		
-		InputStream inputStream;
-		inputStream = new ByteArrayInputStream(response.getBytes());
-		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder dBuilder;
-		Document doc;
-		try {
-			dBuilder = dbFactory.newDocumentBuilder();
-			doc = dBuilder.parse(inputStream);
-			doc.getDocumentElement().normalize();
-	
-			doc.getDocumentElement().getNodeName(); //имя корневого тэга
-			NodeList nList = doc.getElementsByTagName("text"); //получаем все теги text
-			for (int nodeIndex = 0; nodeIndex < nList.getLength(); nodeIndex++) { //пробегаем тэги
-				Node nNode = nList.item(nodeIndex);
-				result = nNode.getFirstChild().getNodeValue();
-				return result;
-			}
-		} catch (SAXException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ParserConfigurationException e) {
-			e.printStackTrace();
-		}
-		return result;
-	}
 	public String _addComment(String factId, String comment) {
+		if (!isOnline()) {
+			return "Отсутствует подключение к интернет";
+		}
 		_checkAuth();
 		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
 		nameValuePairs.add(new BasicNameValuePair("login", mLogin));
@@ -343,6 +322,9 @@ public class AutochmoApplication extends Application {
 	}
 
 	public String _addFact(String carmodel_id, String carmodel, String desc, String gosnomer, String nonomer, String location, Map<String, String> files) {
+		if (!isOnline()) {
+			return "Отсутствует подключение к интернет";
+		}
 		_checkAuth();
 		Map<String, String> nameValuePairs = new HashMap<String, String>();
 		Log.v("carmodel_id " + carmodel_id);
@@ -361,7 +343,7 @@ public class AutochmoApplication extends Application {
 		nameValuePairs.put("latitude", latitude);
 		nameValuePairs.put("carmodel_id", carmodel_id);
 		nameValuePairs.put("carmodel", carmodel);
-		nameValuePairs.put("desc", String.format("%s \n\r%s", desc, location));
+		nameValuePairs.put("desc", desc);
 		nameValuePairs.put("gosnomer", gosnomer);
 		nameValuePairs.put("nogosnomer", nonomer);
 		String responseString = SendDataPost(mHost + "/addfact", nameValuePairs, files);
@@ -369,8 +351,8 @@ public class AutochmoApplication extends Application {
 		String result = _parseXML(responseString, "callresult");
 		if (result.equalsIgnoreCase("ok")) {
 			return this.getString(R.string.add_fact_ok);
-		} else if (result.equalsIgnoreCase("fail")) {
-			return this.getString(R.string.add_fact_fail);
+//		} else if (result.equalsIgnoreCase("fail")) {
+//			return this.getString(R.string.add_fact_fail);
 		} else {
 			_parseXML(responseString, "error", "code");
 			return mLastErrorText;
@@ -433,8 +415,7 @@ public class AutochmoApplication extends Application {
 	}
 
 	public void _checkAuth() {
-		String login = mSettings.getString(
-				this.getString(R.string.loginKey), "");
+		String login = mSettings.getString(this.getString(R.string.loginKey), "");
 		// Add your data
 		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 		nameValuePairs.add(new BasicNameValuePair("login", login));

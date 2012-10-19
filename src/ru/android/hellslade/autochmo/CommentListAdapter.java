@@ -13,38 +13,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 public class CommentListAdapter  extends ArrayAdapter<Comment> {
-//	private AsyncImageLoader asyncImageLoader;
 	private AutochmoApplication mAutochmo;
 	private ListView listView;
 	
     public CommentListAdapter(Activity activity, List<Comment> comments, ListView listView) {
         super(activity, 0, comments);
         this.listView = listView;
-//        asyncImageLoader = new AsyncImageLoader(activity);
         mAutochmo = (AutochmoApplication)activity.getApplication();
     }
-    ExpandablePanel.OnExpandListener listener = new ExpandablePanel.OnExpandListener() {
-        @Override
-        public void onExpand(View handle, View content) {
-            Button btn = (Button) handle;
-            btn.setText("<");
-        }
-        @Override
-        public void onCollapse(View handle, View content) {
-            Button btn = (Button) handle;
-            btn.setText(">");
-        }
-    };
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         Activity activity = (Activity) getContext();
-     // Inflate the views from XML
+        // Inflate the views from XML
         LayoutInflater inflater = activity.getLayoutInflater();
         convertView = inflater.inflate(R.layout.comment_list_row, null);
         
@@ -74,7 +59,6 @@ public class CommentListAdapter  extends ArrayAdapter<Comment> {
 			Log.v(e.getMessage());
 			userDate.setText(comment.getDatecreatedStr());
 		}
-        
  
         return convertView;
     }
