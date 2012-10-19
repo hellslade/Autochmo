@@ -15,6 +15,8 @@ import com.actionbarsherlock.view.MenuItem;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -27,6 +29,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Images.ImageColumns;
+import android.provider.MediaStore.Video.Media;
+import android.provider.MediaStore.Video.VideoColumns;
 import android.text.InputFilter;
 import android.text.format.Time;
 import android.view.View;
@@ -317,11 +321,8 @@ public class FactAddActivity extends SherlockFragmentActivity implements OnClick
                 EditText nomer = (EditText) findViewById(R.id.nomerEditText);
                 final String gosnomer = nomer.getText().toString().trim();
                 final String nonomer = gosnomer.equalsIgnoreCase("") ? "true" : "false";
-                
-//                Map<String, String> files = new HashMap<String, String>();
-//                for (Map.Entry<Bitmap, String> pair : mFiles.entrySet()) {
-//                    files.put(new File(pair.getValue().toString()).getName(), pair.getValue().toString());
-//                }
+
+//                multipartEntity.addPart("video_url_input_0", new StringBody("http://www.youtube.com/watch?v=Dh8nej_R-Yo&feature=g-vrec", Charset.forName(HTTP.UTF_8)));
                 new SendFactTask().execute(mCarmodelId, carmodel, desc_str, gosnomer, nonomer, mFiles);
 
                 break;

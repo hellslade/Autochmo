@@ -32,6 +32,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.ContentBody;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -76,6 +77,7 @@ public class AutochmoApplication extends Application {
 	private boolean isLogin = false;
 	private String mLastErrorCode;
 	private String mLastErrorText;
+	private static final String YOUTUBE_DEVELOPER_KEY = "AI39si7BN-UW29xsPMDmNBePIISF3iCG4NVy_8kfPURj3JoXtHmE7bWyuDLWi4_VzwfNfjen2q90bPrtSYmJiK8onXAyhi1yMA";
 
 	@Override
 	public void onCreate() {
@@ -284,8 +286,6 @@ public class AutochmoApplication extends Application {
 		result[0] =  String.format("%s,%s", String.valueOf(location.getLongitude()), String.valueOf(location.getLatitude()));
 		result[1] = _parseXML(responseString, "text");
 		return result;
-		//return parseYandexResponse(responseString);
-//		return responseString;
 	}
 	public String _addComment(String factId, String comment) {
 		if (!isOnline()) {
@@ -476,26 +476,21 @@ public class AutochmoApplication extends Application {
 		}
 	}
 
-	public String SendDataPost(String url, Map<String, String> nameValuePairs,
-			Map<String, String> files) {
+	public String SendDataPost(String url, Map<String, String> nameValuePairs, Map<String, String> files) {
 		if (!isOnline())
 			return null;
 		HttpClient httpclient = new DefaultHttpClient();
 		HttpPost httpquery = new HttpPost(url);
 		String responseString = "";
 		if (nameValuePairs != null && files != null) {
-			MultipartEntity multipartEntity = new MultipartEntity(
-					HttpMultipartMode.BROWSER_COMPATIBLE);
+			MultipartEntity multipartEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
 			// Ќе следует передавать в конструктор boundary и charset.
 			try {
 				for (Entry<String, String> pair : nameValuePairs.entrySet())
-					multipartEntity.addPart(
-							pair.getKey(),
-							new StringBody(pair.getValue(), Charset
-									.forName(HTTP.UTF_8)));
+					multipartEntity.addPart(pair.getKey(),new StringBody(pair.getValue(), Charset.forName(HTTP.UTF_8)));
 				for (Entry<String, String> entry : files.entrySet())
-					multipartEntity.addPart(entry.getKey(), new FileBody(
-							new File(entry.getValue()), "image/jpeg"));
+					multipartEntity.addPart(entry.getKey(), new FileBody(new File(entry.getValue()), "image/jpeg"));
+				//multipartEntity.addPart("video_url_input_0", new StringBody("http://www.youtube.com/watch?v=Dh8nej_R-Yo&feature=g-vrec", Charset.forName(HTTP.UTF_8)));
 				httpquery.setEntity(multipartEntity);
 				HttpResponse response = httpclient.execute(httpquery);
 				responseString = ReadResponse(response);
