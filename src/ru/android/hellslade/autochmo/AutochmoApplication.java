@@ -58,10 +58,12 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap.CompressFormat;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.media.ExifInterface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 
 public class AutochmoApplication extends Application {
@@ -266,14 +268,19 @@ public class AutochmoApplication extends Application {
 			// Toast.LENGTH_SHORT).show();
 		}
 	}
-	public String[] GetCurrentLocation() {
+	public String[] GetLastLocation(Location location) {
 		String[] result = new String[2];
+		result[0] = "";
+		result[1] = "Отсутствует подключение к интернет";
 		if (!isOnline()) {
-			result[0] = "";
-			result[1] = "Отсутствует подключение к интернет";
 			return result;
 		}
-		Location location = get_location();
+		if (location == null) {
+		    location = get_location();
+		}
+//		if (location == null) {
+//		    return result;
+//		}
 		_checkAuth();
 		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
 		nameValuePairs.add(new BasicNameValuePair("login", mLogin));
@@ -358,7 +365,7 @@ public class AutochmoApplication extends Application {
 			return mLastErrorText;
 		}
 	}
-
+	
 	public Location get_location() {
 		Location location = null;// = getExifLocation(path.getPath());
 		if (location == null) {

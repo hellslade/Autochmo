@@ -17,11 +17,18 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.location.GpsSatellite;
+import android.location.GpsStatus;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.location.LocationProvider;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -60,15 +67,18 @@ public class FactAddActivity extends SherlockFragmentActivity implements OnClick
     		super.onPostExecute(result);
     	}
     }
-    private class GetCurrentLocationTask extends AsyncTask<Void, Void, String[]> {
+    private class GetLastLocationTask extends AsyncTask<Location, Void, String[]> {
     	@Override
     	protected void onPreExecute() {
     		mLocationView.setText("Определяем местоположение...");
     		super.onPreExecute();
     	}
     	@Override
-    	protected String[] doInBackground(Void... params) {
-    		return mAutochmo.GetCurrentLocation();
+    	protected String[] doInBackground(Location... params) {
+    	    if (params.length > 0 && params[0] != null) {
+    	        return mAutochmo.GetLastLocation(params[0]);
+    	    }
+    		return mAutochmo.GetLastLocation(null);
     	}
     	@Override
     	protected void onPostExecute(String[] result) {
@@ -132,13 +142,14 @@ public class FactAddActivity extends SherlockFragmentActivity implements OnClick
     private EditText nomerEdit;
     private TextView mLocationView;
     public AutoCompleteTextView carmark;
+    private LocationManager mLocationManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.addfact);
         carmark = (AutoCompleteTextView) findViewById(R.id.carmarkEditText);
         mAutochmo = (AutochmoApplication)getApplication();
-        
+        mLocationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         ImageButton addShotButton = (ImageButton) findViewById(R.id.buttonAddShot);
         addShotButton.setOnClickListener(this);
         ImageButton addImageButton = (ImageButton) findViewById(R.id.buttonAddImage);
@@ -181,9 +192,55 @@ public class FactAddActivity extends SherlockFragmentActivity implements OnClick
 //                imgView.setTag(mFiles.get(bitmap));
             }
         });
-        new GetCurrentLocationTask().execute();
+        //new GetCurrentLocationTask().execute();
+        get_location();
         new GetCarmodelsTask().execute();
         carmark.setOnItemClickListener(this);
+    }
+    LocationListener locationListener = new LocationListener() {
+        
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+            Log.v("status " + status);
+            if (status == LocationProvider.TEMPORARILY_UNAVAILABLE) {
+                mLocationManager.removeUpdates(locationListener);
+                new GetLastLocationTask().execute();
+            }
+        }
+        
+        @Override
+        public void onProviderEnabled(String provider) {
+        }
+        
+        @Override
+        public void onProviderDisabled(String provider) {
+        }
+        
+        @Override
+        public void onLocationChanged(Location location) {
+            new GetLastLocationTask().execute(location);
+//            mLocationView.setText(String.format("%s,%s", location.getLongitude(), location.getLatitude()));
+//            mLocationView.setTag(String.format("%s,%s", location.getLongitude(), location.getLatitude()));
+        }
+    };
+    public void get_location() {
+        // exceptions will be thrown if provider is not permitted.
+        
+        boolean gps_enabled = false;
+        try {
+            gps_enabled = mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        } catch (Exception ex) {
+        }
+        if (gps_enabled) {
+            Log.v("gps enabled");
+            GpsStatus currentGPSStatus = mLocationManager.getGpsStatus(null);
+            Log.v("currentGPSStatus " + currentGPSStatus.getSatellites());
+            mLocationView.setText("Определяем координаты по GPS...");
+            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+        } else {
+            Log.v("gps disabled");
+            new GetLastLocationTask().execute();
+        }
     }
     public void onClick(View v) {
         switch (v.getId()) {
