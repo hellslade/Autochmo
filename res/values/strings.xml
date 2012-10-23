@@ -7,6 +7,7 @@
     <string name="app_name_settings">åвточмо: Настройки</string>
     <string name="app_name_add_fact">åвточмо: Новый факт</string>
     <string name="app_name_add_comment">åвточмо: Новый комментарий</string>
+    <string name="app_name_map">åвточмо: Карты</string>
 
 <!--     <string name="authorize">http://xml.autochmo.ru/authorize/</string>
     <string name="checkauth">http://xml.autochmo.ru/checkauth/</string>

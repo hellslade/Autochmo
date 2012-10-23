@@ -132,6 +132,7 @@ public class FactAddActivity extends SherlockFragmentActivity implements OnClick
     
 	private static final int PHOTO_REQUEST_CODE = 0x000002;
     private static final int IMAGE_PICK_REQUEST_CODE = 0x000003;
+    private static final int LOCATION_REQUEST_CODE = 0x000004;
     private AutochmoApplication mAutochmo;
     private File mPhotoFile;
     public ImageAdapter imageAdapter;
@@ -143,6 +144,7 @@ public class FactAddActivity extends SherlockFragmentActivity implements OnClick
     private TextView mLocationView;
     public AutoCompleteTextView carmark;
     private LocationManager mLocationManager;
+    private boolean mLocationDetermined = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -158,6 +160,7 @@ public class FactAddActivity extends SherlockFragmentActivity implements OnClick
         nomerEdit = (EditText) findViewById(R.id.nomerEditText);
         mLocationView = (TextView)findViewById(R.id.locationbar);
         mLocationView.setOnClickListener(this);
+        mLocationView.setTag(null);
         nomerEdit.setFilters(new InputFilter[] {new AGosnomerCheck()});
         // TODO: Обрабатывать KeyDown/KeyUp
         /*String[] nomers = new String[]{"н100ка72", "г100пр72", "n100ka86", "h100ky86"};
@@ -192,8 +195,8 @@ public class FactAddActivity extends SherlockFragmentActivity implements OnClick
 //                imgView.setTag(mFiles.get(bitmap));
             }
         });
-        //new GetCurrentLocationTask().execute();
-        get_location();
+        new GetLastLocationTask().execute();
+        //get_location();
         new GetCarmodelsTask().execute();
         carmark.setOnItemClickListener(this);
     }
@@ -219,6 +222,7 @@ public class FactAddActivity extends SherlockFragmentActivity implements OnClick
         @Override
         public void onLocationChanged(Location location) {
             new GetLastLocationTask().execute(location);
+            mLocationManager.removeUpdates(locationListener);
 //            mLocationView.setText(String.format("%s,%s", location.getLongitude(), location.getLatitude()));
 //            mLocationView.setTag(String.format("%s,%s", location.getLongitude(), location.getLatitude()));
         }
@@ -253,7 +257,14 @@ public class FactAddActivity extends SherlockFragmentActivity implements OnClick
                 takePicture();
                 break;
             case (R.id.locationbar):
-                Toast.makeText(this, "Открыть Яндекс.Карты на текущем местоположении.", Toast.LENGTH_LONG).show();
+            	Intent i = new Intent();
+            	i.setClass(this, YandexMapActivity.class);
+            	String l = (String)mLocationView.getTag();
+            	if (l != null) {
+            		i.putExtra("location", l);
+            	}
+            	startActivityForResult(i, this.LOCATION_REQUEST_CODE);
+//                Toast.makeText(this, "Открыть Яндекс.Карты на текущем местоположении.", Toast.LENGTH_LONG).show();
                 break;
         }
     }
@@ -329,6 +340,10 @@ public class FactAddActivity extends SherlockFragmentActivity implements OnClick
                 else {
                     Log.v("idButSelPic Photopicker canceled");
                 }
+            case LOCATION_REQUEST_CODE:
+            	if (resultCode == Activity.RESULT_OK) {
+            		Toast.makeText(this, "Ответ Яндекс.Карт.", Toast.LENGTH_LONG).show();
+            	}
             default:
                 break;
         }

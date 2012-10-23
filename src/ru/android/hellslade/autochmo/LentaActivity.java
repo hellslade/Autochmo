@@ -2,7 +2,6 @@ package ru.android.hellslade.autochmo;
 
 import java.util.List;
 
-import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.SearchManager;
 import android.content.Context;
