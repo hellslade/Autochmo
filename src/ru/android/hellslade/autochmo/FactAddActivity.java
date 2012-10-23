@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import ru.android.hellslade.autochmo.QuickAction.OnActionItemClickListener;
+
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -15,29 +17,17 @@ import com.actionbarsherlock.view.MenuItem;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.ContentResolver;
-import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
-import android.location.GpsSatellite;
-import android.location.GpsStatus;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.location.LocationProvider;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Images.ImageColumns;
-import android.provider.MediaStore.Video.Media;
-import android.provider.MediaStore.Video.VideoColumns;
 import android.text.InputFilter;
 import android.text.format.Time;
 import android.view.View;
@@ -50,7 +40,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Gallery;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 public class FactAddActivity extends SherlockFragmentActivity implements OnClickListener, OnItemClickListener {
@@ -143,15 +132,17 @@ public class FactAddActivity extends SherlockFragmentActivity implements OnClick
     private EditText nomerEdit;
     private TextView mLocationView;
     public AutoCompleteTextView carmark;
-    private LocationManager mLocationManager;
-    private boolean mLocationDetermined = false;
+    
+	private ActionItem mActionView;
+	private ActionItem mActionAdd;
+	private ActionItem mActionDelete;
+	private QuickAction mQA;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.addfact);
         carmark = (AutoCompleteTextView) findViewById(R.id.carmarkEditText);
         mAutochmo = (AutochmoApplication)getApplication();
-        mLocationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         ImageButton addShotButton = (ImageButton) findViewById(R.id.buttonAddShot);
         addShotButton.setOnClickListener(this);
         ImageButton addImageButton = (ImageButton) findViewById(R.id.buttonAddImage);
@@ -187,6 +178,7 @@ public class FactAddActivity extends SherlockFragmentActivity implements OnClick
             		// Вызвать диалог добавления файла
             		takePicture();
             	} else {
+            		ShowQA(v);
             		// Показать QuickAction [Удалить, Просмотреть]
             	}
 //                ImageView imgView = (ImageView)findViewById(R.id.imageView);
@@ -199,52 +191,44 @@ public class FactAddActivity extends SherlockFragmentActivity implements OnClick
         //get_location();
         new GetCarmodelsTask().execute();
         carmark.setOnItemClickListener(this);
+        PrepareQA();
     }
-    LocationListener locationListener = new LocationListener() {
-        
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-            Log.v("status " + status);
-            if (status == LocationProvider.TEMPORARILY_UNAVAILABLE) {
-                mLocationManager.removeUpdates(locationListener);
-                new GetLastLocationTask().execute();
-            }
-        }
-        
-        @Override
-        public void onProviderEnabled(String provider) {
-        }
-        
-        @Override
-        public void onProviderDisabled(String provider) {
-        }
-        
-        @Override
-        public void onLocationChanged(Location location) {
-            new GetLastLocationTask().execute(location);
-            mLocationManager.removeUpdates(locationListener);
-//            mLocationView.setText(String.format("%s,%s", location.getLongitude(), location.getLatitude()));
-//            mLocationView.setTag(String.format("%s,%s", location.getLongitude(), location.getLatitude()));
-        }
-    };
-    public void get_location() {
-        // exceptions will be thrown if provider is not permitted.
-        
-        boolean gps_enabled = false;
-        try {
-            gps_enabled = mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        } catch (Exception ex) {
-        }
-        if (gps_enabled) {
-            Log.v("gps enabled");
-            GpsStatus currentGPSStatus = mLocationManager.getGpsStatus(null);
-            Log.v("currentGPSStatus " + currentGPSStatus.getSatellites());
-            mLocationView.setText("Определяем координаты по GPS...");
-            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-        } else {
-            Log.v("gps disabled");
-            new GetLastLocationTask().execute();
-        }
+    private void PrepareQA() {
+		mQA = new QuickAction(this);
+
+		mActionView = new ActionItem();
+		mActionView.setTitle("Просмотреть");
+		mActionView.setIcon(getResources().getDrawable(android.R.drawable.ic_menu_edit));
+
+		mActionAdd = new ActionItem();
+		mActionAdd.setTitle("Добавить");
+		mActionAdd.setIcon(getResources().getDrawable(android.R.drawable.ic_menu_add));
+
+		mActionDelete = new ActionItem();
+		mActionDelete.setTitle("Удалить");
+		mActionDelete.setIcon(getResources().getDrawable(android.R.drawable.ic_menu_delete));
+		
+		mQA.addActionItem(mActionView);
+		mQA.addActionItem(mActionAdd);
+		mQA.addActionItem(mActionDelete);
+		mQA.setOnActionItemClickListener(onActionItemClickListener);
+	}
+    OnActionItemClickListener onActionItemClickListener = new OnActionItemClickListener() {
+		@Override
+		public void onItemClick(int pos) {
+			switch (pos) {
+				case 0:
+					break;
+				case 1:
+					break;
+				case 2:
+					break;
+			}
+		}
+	};
+    private void ShowQA(View v) {
+    	mQA.show(v);
+    	mQA.setAnimStyle(QuickAction.ANIM_GROW_FROM_CENTER);
     }
     public void onClick(View v) {
         switch (v.getId()) {
@@ -340,10 +324,12 @@ public class FactAddActivity extends SherlockFragmentActivity implements OnClick
                 else {
                     Log.v("idButSelPic Photopicker canceled");
                 }
+                break;
             case LOCATION_REQUEST_CODE:
             	if (resultCode == Activity.RESULT_OK) {
             		Toast.makeText(this, "Ответ Яндекс.Карт.", Toast.LENGTH_LONG).show();
             	}
+            	break;
             default:
                 break;
         }
